@@ -1,0 +1,213 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SPECULA Constitution Schema",
+  "description": "Machine-readable specification for AI governance constitutions under SPECULA framework",
+  "type": "object",
+  "required": ["constitution_id", "version", "principles"],
+  "properties": {
+    "constitution_id": {
+      "type": "string",
+      "description": "Unique identifier for this constitution",
+      "pattern": "^[a-z0-9_-]+$"
+    },
+    "version": {
+      "type": "string",
+      "description": "Semantic version following SPECULA versioning",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "created_timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this constitution was created"
+    },
+    "last_modified": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last modification timestamp"
+    },
+    "stakeholders": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string"},
+          "weight": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
+    },
+    "principles": {
+      "type": "array",
+      "description": "Core governing principles",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "description"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^principle_[a-z0-9_]+$"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable principle name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed explanation of the principle"
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Priority in conflict resolution (1=highest)"
+          },
+          "operationalized_as": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "How this principle is checked operationally"
+          },
+          "stakeholders": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Which stakeholders champion this principle"
+          }
+        }
+      }
+    },
+    "values": {
+      "type": "array",
+      "description": "Core values (higher-level than principles)",
+      "items": {
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string"},
+          "description": {"type": "string"},
+          "principles_supporting": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        }
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "description": "Operational constraints derived from principles",
+      "items": {
+        "type": "object",
+        "required": ["id", "constraint_type", "rule"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^constraint_[a-z0-9_]+$"
+          },
+          "constraint_type": {
+            "type": "string",
+            "enum": ["hard", "soft", "preference"],
+            "description": "Hard=must not violate, Soft=should avoid, Preference=preferred"
+          },
+          "rule": {
+            "type": "string",
+            "description": "Constraint expression (natural language or formal)"
+          },
+          "principle": {
+            "type": "string",
+            "description": "Which principle this constraint operationalizes"
+          },
+          "severity_on_violation": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"],
+            "description": "What happens if violated"
+          },
+          "action_on_violation": {
+            "type": "string",
+            "description": "Action to take if violated"
+          }
+        }
+      }
+    },
+    "behavioral_specs": {
+      "type": "array",
+      "description": "Specific behavioral requirements",
+      "items": {
+        "type": "object",
+        "required": ["id", "behavior", "when_applies"],
+        "properties": {
+          "id": {"type": "string"},
+          "behavior": {"type": "string"},
+          "when_applies": {"type": "string"},
+          "success_criteria": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "related_principles": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        }
+      }
+    },
+    "failure_modes": {
+      "type": "array",
+      "description": "Defined failure modes and recovery",
+      "items": {
+        "type": "object",
+        "required": ["id", "mode", "detection"],
+        "properties": {
+          "id": {"type": "string"},
+          "mode": {"type": "string"},
+          "detection": {"type": "string"},
+          "severity": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"]
+          },
+          "recovery_action": {"type": "string"},
+          "escalation_path": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        }
+      }
+    },
+    "conflict_resolution": {
+      "type": "object",
+      "description": "How to resolve conflicts between principles",
+      "properties": {
+        "strategy": {
+          "type": "string",
+          "enum": ["weighted_voting", "priority_order", "stakeholder_arbitration", "custom"]
+        },
+        "weights": {
+          "type": "object",
+          "additionalProperties": {"type": "number"}
+        },
+        "priority_order": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "custom_rules": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "audit_requirements": {
+      "type": "object",
+      "properties": {
+        "require_trace": {"type": "boolean"},
+        "require_reasoning": {"type": "boolean"},
+        "require_confidence_justification": {"type": "boolean"},
+        "audit_frequency": {"type": "string"},
+        "retention_period": {"type": "string"}
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

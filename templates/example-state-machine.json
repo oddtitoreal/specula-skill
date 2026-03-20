@@ -1,0 +1,453 @@
+{
+  "id": "transparent_decision_workflow_sm",
+  "name": "Transparent Decision Workflow State Machine",
+  "version": "1.0.0",
+  "description": "State machine implementing transparent decision governance per the constitution",
+  "initial_state": "receive_request",
+  "states": {
+    "receive_request": {
+      "id": "receive_request",
+      "name": "Receive User Request",
+      "type": "normal",
+      "description": "Initial state: receive and log incoming request",
+      "entry_actions": [
+        "log_request_received",
+        "assign_request_id",
+        "record_timestamp"
+      ],
+      "exit_guards": [
+        {
+          "id": "guard_valid_request",
+          "condition": "request_id != null AND request_content != null",
+          "on_fail": "error_invalid_request",
+          "severity": "block"
+        }
+      ],
+      "allowed_transitions": ["validate_input", "error_invalid_request"]
+    },
+    "validate_input": {
+      "id": "validate_input",
+      "name": "Validate Input Schema",
+      "type": "normal",
+      "entry_actions": [
+        "validate_schema",
+        "check_user_permissions",
+        "extract_user_context"
+      ],
+      "exit_guards": [
+        {
+          "id": "guard_schema_valid",
+          "condition": "schema_valid AND user_authorized",
+          "on_fail": "error_validation_failed",
+          "severity": "block"
+        }
+      ],
+      "allowed_transitions": ["check_consent", "error_validation_failed"]
+    },
+    "check_consent": {
+      "id": "check_consent",
+      "name": "Verify User Consent",
+      "type": "normal",
+      "description": "Check if sensitive actions have explicit user consent",
+      "entry_actions": [
+        "classify_action_sensitivity",
+        "check_consent_status"
+      ],
+      "exit_guards": [
+        {
+          "id": "guard_consent_valid",
+          "condition": "!sensitive_action OR (sensitive_action AND user_consent == true)",
+          "on_fail": "request_user_consent",
+          "severity": "block"
+        }
+      ],
+      "allowed_transitions": ["constitutional_assessment", "request_user_consent"]
+    },
+    "constitutional_assessment": {
+      "id": "constitutional_assessment",
+      "name": "Constitutional Principle Assessment",
+      "type": "normal",
+      "description": "Apply constitutional guards before decision logic",
+      "entry_actions": [
+        "apply_all_guards",
+        "check_fairness_constraints",
+        "verify_no_bias"
+      ],
+      "exit_guards": [
+        {
+          "id": "guard_fairness_check",
+          "condition": "fairness_audit_passed",
+          "on_fail": "escalate_fairness_violation",
+          "severity": "block"
+        },
+        {
+          "id": "guard_bias_check",
+          "condition": "bias_audit_passed",
+          "on_fail": "escalate_bias_detected",
+          "severity": "block"
+        }
+      ],
+      "allowed_transitions": [
+        "decision_generation",
+        "escalate_fairness_violation",
+        "escalate_bias_detected"
+      ]
+    },
+    "decision_generation": {
+      "id": "decision_generation",
+      "name": "Generate Decision with Reasoning",
+      "type": "normal",
+      "description": "Invoke decision logic and generate reasoning trace",
+      "entry_actions": [
+        "invoke_decision_logic",
+        "generate_reasoning_trace",
+        "identify_alternatives",
+        "calculate_confidence"
+      ],
+      "exit_guards": [
+        {
+          "id": "guard_reasoning_exists",
+          "condition": "reasoning_trace != null AND reasoning_trace.length > 0",
+          "on_fail": "error_reasoning_generation_failed",
+          "severity": "block"
+        }
+      ],
+      "allowed_transitions": ["confidence_check", "error_reasoning_generation_failed"]
+    },
+    "confidence_check": {
+      "id": "confidence_check",
+      "name": "Evaluate Decision Confidence",
+      "type": "normal",
+      "entry_actions": [
+        "evaluate_confidence_score",
+        "generate_confidence_justification"
+      ],
+      "exit_guards": [
+        {
+          "id": "guard_confidence_adequate",
+          "condition": "confidence_score >= 0.75 OR (confidence_score < 0.75 AND confidence_justification_complete)",
+          "on_fail": "escalate_low_confidence",
+          "severity": "warn"
+        }
+      ],
+      "allowed_transitions": [
+        "high_confidence_path",
+        "escalate_low_confidence"
+      ]
+    },
+    "high_confidence_path": {
+      "id": "high_confidence_path",
+      "name": "High Confidence Decision Path",
+      "type": "normal",
+      "description": "Decision is high confidence - proceed to output",
+      "entry_actions": ["prepare_high_confidence_output"],
+      "allowed_transitions": ["transparency_output"]
+    },
+    "escalate_low_confidence": {
+      "id": "escalate_low_confidence",
+      "name": "Escalate Low Confidence Decision",
+      "type": "escalation",
+      "description": "Decision confidence too low - requires human review",
+      "entry_actions": [
+        "notify_human_reviewer",
+        "provide_decision_context",
+        "set_escalation_flag"
+      ],
+      "allowed_transitions": ["human_review_in_progress"]
+    },
+    "human_review_in_progress": {
+      "id": "human_review_in_progress",
+      "name": "Awaiting Human Review",
+      "type": "normal",
+      "timeout": {
+        "duration_ms": 3600000,
+        "on_timeout": "escalate_timeout"
+      },
+      "entry_actions": ["log_escalation_start"],
+      "allowed_transitions": [
+        "transparency_output",
+        "human_approved_override",
+        "escalate_timeout"
+      ]
+    },
+    "transparency_output": {
+      "id": "transparency_output",
+      "name": "Generate Transparent Output",
+      "type": "normal",
+      "description": "Format complete output with reasoning, confidence, alternatives",
+      "entry_actions": [
+        "format_reasoning_trace",
+        "include_confidence_score",
+        "document_alternatives",
+        "prepare_user_controls"
+      ],
+      "exit_guards": [
+        {
+          "id": "guard_output_complete",
+          "condition": "reasoning_present AND confidence_present AND alternatives_present",
+          "on_fail": "error_incomplete_output",
+          "severity": "block"
+        }
+      ],
+      "allowed_transitions": ["output_ready", "error_incomplete_output"]
+    },
+    "output_ready": {
+      "id": "output_ready",
+      "name": "Output Ready for User",
+      "type": "terminal",
+      "description": "Decision formatted and ready - success state",
+      "entry_actions": [
+        "finalize_response",
+        "log_complete_trace",
+        "record_delivery_timestamp"
+      ]
+    },
+    "request_user_consent": {
+      "id": "request_user_consent",
+      "name": "Request User Consent",
+      "type": "normal",
+      "entry_actions": ["send_consent_request"],
+      "timeout": {
+        "duration_ms": 86400000,
+        "on_timeout": "consent_timeout"
+      },
+      "allowed_transitions": ["consent_received", "consent_denied", "consent_timeout"]
+    },
+    "consent_received": {
+      "id": "consent_received",
+      "name": "Consent Received",
+      "type": "normal",
+      "entry_actions": ["record_consent"],
+      "allowed_transitions": ["constitutional_assessment"]
+    },
+    "consent_denied": {
+      "id": "consent_denied",
+      "name": "Consent Denied",
+      "type": "terminal",
+      "entry_actions": ["log_consent_denied", "notify_user"]
+    },
+    "consent_timeout": {
+      "id": "consent_timeout",
+      "name": "Consent Request Timeout",
+      "type": "terminal",
+      "entry_actions": ["log_timeout", "cleanup"]
+    },
+    "escalate_fairness_violation": {
+      "id": "escalate_fairness_violation",
+      "name": "Escalate Fairness Violation",
+      "type": "escalation",
+      "entry_actions": [
+        "notify_compliance_team",
+        "block_output",
+        "log_critical_alert"
+      ]
+    },
+    "escalate_bias_detected": {
+      "id": "escalate_bias_detected",
+      "name": "Escalate Bias Detection",
+      "type": "escalation",
+      "entry_actions": [
+        "notify_auditor",
+        "quarantine_decision",
+        "log_bias_incident"
+      ]
+    },
+    "human_approved_override": {
+      "id": "human_approved_override",
+      "name": "Human Approved Override",
+      "type": "normal",
+      "entry_actions": ["log_human_approval"],
+      "allowed_transitions": ["transparency_output"]
+    },
+    "error_invalid_request": {
+      "id": "error_invalid_request",
+      "name": "Error: Invalid Request",
+      "type": "error",
+      "entry_actions": ["log_error", "return_error_response"]
+    },
+    "error_validation_failed": {
+      "id": "error_validation_failed",
+      "name": "Error: Validation Failed",
+      "type": "error",
+      "entry_actions": ["log_validation_error", "return_error_response"]
+    },
+    "error_reasoning_generation_failed": {
+      "id": "error_reasoning_generation_failed",
+      "name": "Error: Reasoning Generation Failed",
+      "type": "error",
+      "entry_actions": [
+        "log_critical_error",
+        "escalate_to_developer",
+        "return_error_response"
+      ]
+    },
+    "error_incomplete_output": {
+      "id": "error_incomplete_output",
+      "name": "Error: Incomplete Output",
+      "type": "error",
+      "entry_actions": ["log_error", "escalate_to_developer"]
+    },
+    "escalate_timeout": {
+      "id": "escalate_timeout",
+      "name": "Escalate: Human Review Timeout",
+      "type": "error",
+      "entry_actions": ["log_timeout", "escalate_to_supervisor"]
+    }
+  },
+  "transitions": [
+    {
+      "id": "transition_request_to_validate",
+      "from_state": "receive_request",
+      "to_state": "validate_input",
+      "trigger": "proceed_after_receive",
+      "preconditions": ["request_valid"]
+    },
+    {
+      "id": "transition_validate_to_consent",
+      "from_state": "validate_input",
+      "to_state": "check_consent",
+      "trigger": "validation_complete",
+      "guard_ids": ["guard_schema_valid"]
+    },
+    {
+      "id": "transition_consent_to_constitutional",
+      "from_state": "check_consent",
+      "to_state": "constitutional_assessment",
+      "trigger": "consent_verified",
+      "guard_ids": ["guard_consent_valid"]
+    },
+    {
+      "id": "transition_constitutional_to_decision",
+      "from_state": "constitutional_assessment",
+      "to_state": "decision_generation",
+      "trigger": "constitutional_checks_passed",
+      "guard_ids": ["guard_fairness_check", "guard_bias_check"]
+    },
+    {
+      "id": "transition_decision_to_confidence",
+      "from_state": "decision_generation",
+      "to_state": "confidence_check",
+      "trigger": "decision_generated",
+      "guard_ids": ["guard_reasoning_exists"]
+    },
+    {
+      "id": "transition_high_confidence_to_output",
+      "from_state": "confidence_check",
+      "to_state": "high_confidence_path",
+      "trigger": "confidence_high",
+      "preconditions": ["confidence_score >= 0.75"]
+    },
+    {
+      "id": "transition_high_conf_path_to_transparency",
+      "from_state": "high_confidence_path",
+      "to_state": "transparency_output",
+      "trigger": "proceed_to_output"
+    },
+    {
+      "id": "transition_low_confidence_escalation",
+      "from_state": "confidence_check",
+      "to_state": "escalate_low_confidence",
+      "trigger": "confidence_low",
+      "preconditions": ["confidence_score < 0.75"]
+    },
+    {
+      "id": "transition_escalation_to_review",
+      "from_state": "escalate_low_confidence",
+      "to_state": "human_review_in_progress",
+      "trigger": "human_reviewer_assigned"
+    },
+    {
+      "id": "transition_human_review_approved",
+      "from_state": "human_review_in_progress",
+      "to_state": "human_approved_override",
+      "trigger": "human_approves"
+    },
+    {
+      "id": "transition_approved_to_output",
+      "from_state": "human_approved_override",
+      "to_state": "transparency_output",
+      "trigger": "proceed_to_output"
+    },
+    {
+      "id": "transition_transparency_output_to_ready",
+      "from_state": "transparency_output",
+      "to_state": "output_ready",
+      "trigger": "output_formatted",
+      "guard_ids": ["guard_output_complete"]
+    }
+  ],
+  "guards": [
+    {
+      "id": "guard_transparency",
+      "name": "Transparency Guard",
+      "applies_to": "output",
+      "condition": "reasoning_trace != null AND confidence_score != null",
+      "principle": "principle_transparency",
+      "action_on_violation": "block",
+      "severity": "critical",
+      "error_message": "Cannot output decision without complete reasoning trace and confidence score"
+    },
+    {
+      "id": "guard_fairness_primary",
+      "name": "Fairness Primary Guard",
+      "applies_to": "transition",
+      "applies_at_state": "constitutional_assessment",
+      "condition": "fairness_audit_passed AND no_disparate_impact",
+      "principle": "principle_fairness",
+      "action_on_violation": "block",
+      "severity": "critical",
+      "error_message": "Decision flagged for fairness violation - escalating to compliance"
+    },
+    {
+      "id": "guard_user_autonomy",
+      "name": "User Autonomy Guard",
+      "applies_to": "state",
+      "applies_at_state": "transparency_output",
+      "condition": "user_override_option_available OR decision_not_binding",
+      "principle": "principle_user_autonomy",
+      "action_on_violation": "warn",
+      "severity": "high",
+      "error_message": "User should have ability to override recommendation"
+    },
+    {
+      "id": "guard_accuracy",
+      "name": "Accuracy Guard",
+      "applies_to": "transition",
+      "applies_at_state": "confidence_check",
+      "condition": "evidence_quality_sufficient AND consistency_verified",
+      "principle": "principle_accuracy",
+      "action_on_violation": "escalate",
+      "severity": "high",
+      "error_message": "Decision accuracy requirements not met - escalating for review"
+    }
+  ],
+  "actions": [
+    {
+      "id": "action_log_request",
+      "name": "Log Request Received",
+      "implementation": "Write request to audit log with timestamp and user_id"
+    },
+    {
+      "id": "action_apply_guards",
+      "name": "Apply Constitutional Guards",
+      "implementation": "Execute all guard conditions and report results"
+    },
+    {
+      "id": "action_generate_reasoning",
+      "name": "Generate Reasoning Trace",
+      "implementation": "Invoke decision logic to produce step-by-step reasoning"
+    }
+  ],
+  "error_handling": {
+    "default_error_state": "error_incomplete_output",
+    "uncaught_exception_action": "escalate_to_developer",
+    "critical_failure_action": "block_and_alert"
+  },
+  "metadata": {
+    "framework_version": "SPECULA_v2.3",
+    "author": "AI Governance Team",
+    "created_timestamp": "2026-01-15T10:00:00Z",
+    "last_modified": "2026-01-15T10:00:00Z",
+    "related_constitution": "transparency_decision_system_v1"
+  }
+}

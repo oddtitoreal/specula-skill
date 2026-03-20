@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPECULA Skill - Documentazione Completa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        header {
+            border-bottom: 3px solid #0066cc;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            color: #0066cc;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .version {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        h2 {
+            color: #0066cc;
+            font-size: 1.8em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            border-left: 4px solid #0066cc;
+            padding-left: 15px;
+        }
+        
+        h3 {
+            color: #333;
+            font-size: 1.3em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        
+        h4 {
+            color: #555;
+            font-size: 1.1em;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            line-height: 1.5;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        
+        .box {
+            background: #f9f9f9;
+            border-left: 4px solid #0066cc;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 3px;
+        }
+        
+        .box.warning {
+            border-left-color: #ff9800;
+            background: #fff3e0;
+        }
+        
+        .box.success {
+            border-left-color: #4caf50;
+            background: #f1f8e9;
+        }
+        
+        .box.info {
+            border-left-color: #2196f3;
+            background: #e3f2fd;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background: #0066cc;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        .toc {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .toc h3 {
+            margin-top: 0;
+        }
+        
+        .toc ul {
+            list-style: none;
+            margin-left: 0;
+        }
+        
+        .toc a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        
+        .toc > ul > li {
+            margin-bottom: 10px;
+        }
+        
+        .toc > ul > li > ul {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+        
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #0066cc;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #0052a3;
+        }
+        
+        .btn.secondary {
+            background: #666;
+        }
+        
+        .btn.secondary:hover {
+            background: #555;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .card {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+        }
+        
+        .card h4 {
+            margin-top: 0;
+            color: #0066cc;
+        }
+        
+        footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .structure {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛡️ SPECULA Framework Skill</h1>
+            <p class="version">Skill Version 1.0.0 | Framework: SPECULA v2.3 | Data: 2026-01-15</p>
+            <p>Comprehensive technical guide for AI governance, control logic, and operational architecture</p>
+        </header>
+
+        <div class="toc">
+            <h3>📑 Indice dei Contenuti</h3>
+            <ul>
+                <li><a href="#overview">Panoramica</a></li>
+                <li><a href="#capabilities">Capacità della Skill</a></li>
+                <li><a href="#quickstart">Quick Start</a></li>
+                <li><a href="#concepts">Concetti Chiave</a></li>
+                <li><a href="#constitution">Costituzione AI</a></li>
+                <li><a href="#statemachine">State Machine</a></li>
+                <li><a href="#patterns">Pattern Comuni</a></li>
+                <li><a href="#usecases">Casi d'Uso Reali</a></li>
+                <li><a href="#download">Download e Installazione</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+        </div>
+
+        <section id="overview">
+            <h2>Che cos'è SPECULA?</h2>
+            <p>SPECULA è un framework sistematico per <strong>governance AI, control logic e architettura operazionale</strong>. Fornisce:</p>
+            <ul>
+                <li><strong>AI Constitutions</strong> — Principi di governance formali e valori</li>
+                <li><strong>State Machines</strong> — Logica operazionale che enforza governance</li>
+                <li><strong>JSON Schemas</strong> — Specifiche machine-readable</li>
+                <li><strong>Validation Tools</strong> — Assicura compliance e consistenza</li>
+                <li><strong>Templates</strong> — Esempi pratici e playbooks</li>
+            </ul>
+            
+            <div class="box info">
+                <strong>Per esperti di governance AI:</strong> Questa skill è progettata con dettagli tecnici approfonditi, JSON schemas formali, state machine complesse e best practices di operazionalizzazione.
+            </div>
+        </section>
+
+        <section id="capabilities">
+            <h2>Capacità della Skill</h2>
+            
+            <div class="grid">
+                <div class="card">
+                    <h4>1️⃣ Constitutional Design</h4>
+                    <p>Definire principi di governance, valori e vincoli che guidano il comportamento del sistema AI.</p>
+                </div>
+                <div class="card">
+                    <h4>2️⃣ State Machine Architecture</h4>
+                    <p>Disegnare workflow operazionali che enforzo i principi costituzionali in ogni punto di decisione.</p>
+                </div>
+                <div class="card">
+                    <h4>3️⃣ Guard Conditions</h4>
+                    <p>Specificare controlli costituzionali che devono passare alle transizioni di stato.</p>
+                </div>
+                <div class="card">
+                    <h4>4️⃣ Multi-Phase Workflows</h4>
+                    <p>Orchestrare governance complessa su multiple fasi con principi differenti.</p>
+                </div>
+                <div class="card">
+                    <h4>5️⃣ Validation & Testing</h4>
+                    <p>Validare che constitutioni e state machine funzionino correttamente insieme.</p>
+                </div>
+                <div class="card">
+                    <h4>6️⃣ Audit Trails</h4>
+                    <p>Catturare traccia completa di governance per compliance e revisione.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="quickstart">
+            <h2>🚀 Quick Start (5 Minuti)</h2>
+            
+            <h3>Step 1: Definisci la Tua Constitution</h3>
+            <p>Articola i principi che guidano il tuo sistema AI:</p>
+            <pre><code>{
+  "constitution_id": "my_system_v1",
+  "principles": [
+    {
+      "id": "principle_transparency",
+      "name": "Transparency",
+      "description": "Tutti gli output includono il ragionamento",
+      "operationalized_as": ["reasoning_trace", "confidence_score"]
+    }
+  ]
+}</code></pre>
+
+            <h3>Step 2: Disegna il Tuo State Machine</h3>
+            <p>Mappora come il sistema fluisce attraverso gli stati applicando governance:</p>
+            <pre><code>{
+  "id": "my_workflow_sm",
+  "initial_state": "receive_input",
+  "states": {
+    "receive_input": { ... },
+    "validate": { ... },
+    "decide": { ... },
+    "output": { ... }
+  },
+  "guards": [
+    {
+      "id": "guard_transparency",
+      "condition": "reasoning_trace != null",
+      "principle": "principle_transparency"
+    }
+  ]
+}</code></pre>
+
+            <h3>Step 3: Valida il Tuo Sistema</h3>
+            <pre><code>python scripts/validate_specula.py \
+  --constitution my_constitution.json \
+  --state-machine my_state_machine.json</code></pre>
+
+            <div class="box success">
+                <strong>Risultato atteso:</strong> ✅ All validations passed!
+            </div>
+        </section>
+
+        <section id="concepts">
+            <h2>🎯 Concetti Chiave</h2>
+
+            <h3>Constitution</h3>
+            <p>Definisce principi di governance, valori, vincoli e comportamenti.</p>
+            <ul>
+                <li><strong>Principles</strong> — Principi core di governance (trasparenza, fairness, ecc.)</li>
+                <li><strong>Values</strong> — Valori di livello più alto (autonomia utente, affidabilità sistema)</li>
+                <li><strong>Constraints</strong> — Regole operative derivate dai principi</li>
+                <li><strong>Behavioral Specs</strong> — Comportamenti specifici richiesti</li>
+                <li><strong>Failure Modes</strong> — Come gestire le violazioni</li>
+            </ul>
+
+            <h3>State Machine</h3>
+            <p>Implementazione operazionale della governance usando il modello di finite state machine.</p>
+            <ul>
+                <li><strong>States</strong> — Tutti i possibili stati del sistema</li>
+                <li><strong>Transitions</strong> — Come il sistema si muove tra stati</li>
+                <li><strong>Guards</strong> — Controlli costituzionali alle transizioni</li>
+                <li><strong>Actions</strong> — Cosa accade in ogni stato</li>
+            </ul>
+
+            <h3>Guard</h3>
+            <p>Una condizione che deve essere soddisfatta per procedere. I guard operazionalizzano i principi costituzionali.</p>
+            <ul>
+                <li><strong>Hard Guards</strong> — Devono passare (bloccano se falliscono)</li>
+                <li><strong>Soft Guards</strong> — Dovrebbero passare (avvertono se falliscono)</li>
+                <li><strong>Escalation Guards</strong> — Attivano revisione umana se falliscono</li>
+            </ul>
+
+            <h3>Workflow</h3>
+            <p>Sequenza di state machine, ogni fase con diverse esigenze di governance.</p>
+        </section>
+
+        <section id="constitution">
+            <h2>📜 Progettare una Constitution</h2>
+
+            <h3>Esempio: Sistema di Decisione Trasparente e Equo</h3>
+            <p>Supponiamo di voler creare un sistema che:</p>
+            <ul>
+                <li>Fornisce decisioni con ragionamento completo</li>
+                <li>Rispetta l'autonomia dell'utente</li>
+                <li>Non discrimina gruppi protetti</li>
+                <li>Mantiene un'alta accuratezza</li>
+            </ul>
+
+            <h4>Principi della Constitution:</h4>
+            <table>
+                <tr>
+                    <th>Principio</th>
+                    <th>Descrizione</th>
+                    <th>Operazionalizzazione</th>
+                    <th>Priorità</th>
+                </tr>
+                <tr>
+                    <td>Transparency</td>
+                    <td>Tutte le decisioni includono ragionamento</td>
+                    <td>reasoning_trace, confidence_score</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td>Fairness</td>
+                    <td>Nessuna discriminazione basata su attributi protetti</td>
+                    <td>bias_audit, protected_attribute_check</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>User Autonomy</td>
+                    <td>L'utente ha autorità decisionale finale</td>
+                    <td>user_override_allowed, consent_required</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td>Accuracy</td>
+                    <td>Soglie minime di accuratezza e confidenza</td>
+                    <td>confidence_threshold, evidence_quality</td>
+                    <td>3</td>
+                </tr>
+            </table>
+
+            <h4>Vincoli Derivati:</h4>
+            <pre><code>{
+  "constraints": [
+    {
+      "id": "constraint_reasoning_mandatory",
+      "constraint_type": "hard",
+      "rule": "Ogni decisione DEVE includere una reasoning_trace",
+      "principle": "principle_transparency",
+      "severity_on_violation": "critical",
+      "action_on_violation": "reject_output"
+    },
+    {
+      "id": "constraint_fairness_check",
+      "constraint_type": "hard",
+      "rule": "Nessun impatto statisticamente significativo su gruppi protetti",
+      "principle": "principle_fairness",
+      "severity_on_violation": "critical",
+      "action_on_violation": "escalate_to_auditor"
+    }
+  ]
+}</code></pre>
+        </section>
+
+        <section id="statemachine">
+            <h2>⚙️ State Machine per Enforced Governance</h2>
+
+            <h3>Workflow di Decisione Trasparente</h3>
+            <p>Uno state machine che applica i principi della constitution:</p>
+
+            <pre><code>receive_request
+    ↓
+validate_input (schema, permissions)
+    ↓
+check_consent (user consent if sensitive)
+    ↓
+constitutional_assessment (apply all guards)
+    ├→ fairness_check ✓
+    ├→ bias_audit ✓
+    └→ consistency_verify ✓
+    ↓
+decision_generation (invoke logic + reasoning)
+    ↓
+confidence_check
+    ├→ [HIGH CONF] → high_confidence_path
+    └→ [LOW CONF] → escalate_for_human_review
+    ↓
+transparency_output (format with reasoning)
+    ↓
+output_ready (terminal state)</code></pre>
+
+            <h3>Guard a Transizioni Chiave</h3>
+            <table>
+                <tr>
+                    <th>Transizione</th>
+                    <th>Guard</th>
+                    <th>Se Fallisce</th>
+                </tr>
+                <tr>
+                    <td>constitutional_assessment → decision_generation</td>
+                    <td>guard_fairness_check</td>
+                    <td>escalate_fairness_violation</td>
+                </tr>
+                <tr>
+                    <td>decision_generation → confidence_check</td>
+                    <td>guard_reasoning_exists</td>
+                    <td>error_reasoning_generation_failed</td>
+                </tr>
+                <tr>
+                    <td>confidence_check → output</td>
+                    <td>guard_confidence_adequate</td>
+                    <td>escalate_low_confidence</td>
+                </tr>
+                <tr>
+                    <td>→ transparency_output</td>
+                    <td>guard_transparency</td>
+                    <td>error_incomplete_output</td>
+                </tr>
+            </table>
+        </section>
+
+        <section id="patterns">
+            <h2>🔄 Pattern Comuni di Governance</h2>
+
+            <h3>Pattern 1: Sistemi Semplici</h3>
+            <p>Una sola state machine con guard basic:</p>
+            <pre><code>{
+  "constitution": {...},
+  "state_machine": "decision_workflow_sm"
+}</code></pre>
+
+            <h3>Pattern 2: Governance Multi-Fase</h3>
+            <p>Principi diversi in fasi diverse:</p>
+            <pre><code>{
+  "workflow": {
+    "phase_1": "input_validation_sm",      // Focus: integrità dati
+    "phase_2": "decision_logic_sm",        // Focus: trasparenza
+    "phase_3": "output_generation_sm"      // Focus: prevenzione danno
+  }
+}</code></pre>
+
+            <h3>Pattern 3: Allineamento Multi-Stakeholder</h3>
+            <p>Multipli stakeholder con principi diversi:</p>
+            <pre><code>{
+  "constitution": {
+    "stakeholders": ["developer", "user", "auditor"],
+    "conflict_resolution": "priority_order",
+    "priority": ["fairness", "transparency", "accuracy"]
+  }
+}</code></pre>
+
+            <h3>Pattern 4: Escalation a Catena</h3>
+            <p>Multi-level escalation per violazioni:</p>
+            <pre><code>{
+  "escalation_policy": {
+    "level_1": "log_and_continue",
+    "level_2": "flag_for_review",
+    "level_3": "request_human_intervention",
+    "level_4": "block_and_alert"
+  }
+}</code></pre>
+        </section>
+
+        <section id="usecases">
+            <h2>💼 Casi d'Uso Reali</h2>
+
+            <h3>Caso 1: Sistema AI per Assunzioni</h3>
+            <p><strong>Esigenza di Governance:</strong> Prevenire discriminazione, assicurare fairness, meccanismo di ricorso</p>
+            
+            <h4>Constitution:</h4>
+            <ul>
+                <li>Principio: "Fairness" (nessun disparate impact)</li>
+                <li>Principio: "Transparency" (ragionamento fornito al candidato)</li>
+                <li>Vincolo: "Non può discriminare basandosi su attributi protetti"</li>
+            </ul>
+
+            <h4>State Machine:</h4>
+            <pre><code>Input Validation → Fairness Audit → Candidate Analysis → 
+Scoring (with reasoning) → Appeal Mechanism Ready</code></pre>
+
+            <h3>Caso 2: Assistente AI Medico</h3>
+            <p><strong>Esigenza di Governance:</strong> Safety critical, spiegabilità, supervisione umana</p>
+            
+            <h4>Constitution:</h4>
+            <ul>
+                <li>Principio: "Safety" (alta confidenza richiesta)</li>
+                <li>Principio: "Transparency" (ragionamento fornito)</li>
+                <li>Vincolo: "Deve escalare per raccomandazioni a bassa confidenza"</li>
+                <li>Vincolo: "Tutte le raccomandazioni sono revisionabili dal medico"</li>
+            </ul>
+
+            <h4>State Machine:</h4>
+            <pre><code>Validate Patient Data → Check Medical Guidelines → 
+Generate Recommendation (with reasoning) → Confidence Check → 
+(High conf: output) | (Low conf: escalate to physician)</code></pre>
+
+            <h3>Caso 3: Content Moderation</h3>
+            <p><strong>Esigenza di Governance:</strong> Coerenza, fairness negli appelli, spiegazione</p>
+            
+            <h4>Constitution:</h4>
+            <ul>
+                <li>Principio: "Consistency" (applica regole uniformemente)</li>
+                <li>Principio: "Fairness" (gli appelli sono considerati)</li>
+                <li>Principio: "Transparency" (ragionamento della decisione fornito)</li>
+            </ul>
+
+            <h4>State Machine:</h4>
+            <pre><code>Receive Content → Classify Content Type → Apply Moderation Rules → 
+Confidence Check → (High conf: output) | (Low conf: human review) → 
+Appeal Ready</code></pre>
+        </section>
+
+        <section id="download">
+            <h2>📥 Download e Installazione</h2>
+
+            <h3>Opzioni di Download</h3>
+            
+            <div class="button-group">
+                <a href="specula-skill.zip" class="btn">📦 Scarica ZIP</a>
+                <a href="specula-skill.tar.gz" class="btn">📦 Scarica TAR.GZ</a>
+                <a href="SPECULA-SKILL.md" class="btn secondary">📄 Skill.md</a>
+                <a href="SPECULA-README.md" class="btn secondary">📄 README.md</a>
+            </div>
+
+            <h3>Struttura dei File</h3>
+            <div class="structure">specula-skill/
+├── SKILL.md                          # Documentazione principale (2000+ linee)
+├── README.md                         # Guida utente
+├── scripts/
+│   └── validate_specula.py           # Tool di validazione
+├── references/
+│   ├── schemas-constitution.json    # JSON Schema per constitutioni
+│   ├── schemas-statemachine.json    # JSON Schema per state machine
+│   └── versioning.md                # SPECULA versioning rules
+└── templates/
+    ├── example-constitution.json    # Constitution di esempio (testata ✅)
+    └── example-state-machine.json   # State machine di esempio (testato ✅)</div>
+
+            <h3>Installazione Locale</h3>
+            <pre><code># Estrai il file ZIP
+unzip specula-skill.zip
+
+# O il TAR.GZ
+tar -xzf specula-skill.tar.gz
+
+# Entra nella cartella
+cd specula-skill
+
+# Valida un esempio
+python scripts/validate_specula.py \
+  --constitution templates/example-constitution.json \
+  --state-machine templates/example-state-machine.json</code></pre>
+
+            <div class="box success">
+                <strong>✅ Test Validazione:</strong> Entrambi i template di esempio sono stati testati e passano la validazione con successo.
+            </div>
+        </section>
+
+        <section id="faq">
+            <h2>❓ FAQ</h2>
+
+            <h3>D: Posso avere principi in conflitto?</h3>
+            <p><strong>R:</strong> Sì — usa <code>conflict_resolution</code> nella tua constitution per specificare come risolverli. Supporta: priority_order, weighted_voting, stakeholder_arbitration.</p>
+
+            <h3>D: Posso modificare una state machine a runtime?</h3>
+            <p><strong>R:</strong> SPECULA enforza la validazione dello schema per prevenire modifiche non autorizzate. Usa il versioning invece.</p>
+
+            <h3>D: Cosa accade se un guard fallisce?</h3>
+            <p><strong>R:</strong> L'azione del guard determina cosa succede (block, escalate, o log). Configura questo esplicitamente nel guard.</p>
+
+            <h3>D: Come audito la compliance?</h3>
+            <p><strong>R:</strong> Usa <code>validate_specula.py</code> e rivedi la <code>governance_trace</code> in tutti gli output.</p>
+
+            <h3>D: Posso testare la mia constitution prima del deployment?</h3>
+            <p><strong>R:</strong> Sì — crea scenari di test, esegui attraverso la tua state machine, e valida che tutti i guard passino.</p>
+
+            <h3>D: Qual è la differenza tra vincoli hard e soft?</h3>
+            <p><strong>R:</strong> <code>Hard</code> vincoli bloccano l'esecuzione se violati. <code>Soft</code> vincoli avvertono ma permettono di continuare.</p>
+
+            <h3>D: Come gestisco multiple lingue/regioni?</h3>
+            <p><strong>R:</strong> Define principi e vincoli che si applicano globalmente, poi aggiungi layer regionali nella constitution usando stakeholder-specific principles.</p>
+
+            <h3>D: Posso usare SPECULA in sistemi di produzione?</h3>
+            <p><strong>R:</strong> Sì — SPECULA è progettato per systemi di produzione. Inizia con una constitution semplice, valida completamente, distribuisci con audit logging completo.</p>
+        </section>
+
+        <section>
+            <h2>📚 Risorse Aggiuntive</h2>
+            <ul>
+                <li><strong>Repository Ufficiale:</strong> <a href="https://github.com/oddtitoreal/specula-framework" target="_blank">github.com/oddtitoreal/specula-framework</a></li>
+                <li><strong>Template di Esempio:</strong> Inclusi nella skill (già testati ✅)</li>
+                <li><strong>Validazione Tool:</strong> Python script incluso per validare costituzioni e state machine</li>
+                <li><strong>JSON Schemas:</strong> Specifiche formali incluse per machine-readability</li>
+            </ul>
+        </section>
+
+        <footer>
+            <p>🛡️ SPECULA Skill v1.0.0 | Framework: SPECULA v2.3</p>
+            <p>Progettato per ricercatori e esperti di governance AI</p>
+            <p>Creato: 2026-01-15</p>
+        </footer>
+    </div>
+</body>
+</html>
