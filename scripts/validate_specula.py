@@ -1,7 +1,18 @@
 #!/usr/bin/env python3
 """
-SPECULA Validation Tool
+SPECULA Validation Tool (v0.1)
+
 Validates SPECULA governance structures against JSON schemas and consistency rules.
+
+CAPABILITIES (v0.1):
+- Constitution schema compliance
+- State machine consistency checking
+- Guard-to-principle mapping
+- Constitution/state machine integration verification
+
+PLANNED (v0.2+):
+- Workflow orchestration validation
+- Runtime execution trace validation
 """
 
 from __future__ import annotations
@@ -296,9 +307,8 @@ class SPECULAValidator:
 
 def main():
     parser = argparse.ArgumentParser(description="SPECULA Governance Framework Validator")
-    parser.add_argument("--constitution", help="Path to constitution JSON")
-    parser.add_argument("--state-machine", help="Path to state machine JSON")
-    parser.add_argument("--workflow", help="Path to workflow JSON")
+    parser.add_argument("--constitution", help="Path to constitution JSON file")
+    parser.add_argument("--state-machine", help="Path to state machine JSON file")
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
 
     args = parser.parse_args()
@@ -319,11 +329,6 @@ def main():
     if args.constitution and args.state_machine:
         if not validator.validate_integration(args.constitution, args.state_machine):
             valid = False
-
-    if args.workflow:
-        validator.warnings.append(
-            "--workflow supplied but workflow-specific validation is not implemented yet"
-        )
 
     validator.print_report()
 

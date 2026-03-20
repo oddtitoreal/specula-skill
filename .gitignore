@@ -1,15 +1,44 @@
-# macOS
-.DS_Store
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
 
 # Python
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 .pytest_cache/
-.venv/
-venv/
 
-# Editors
+# IDE / editor
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project outputs
+test-results/
+validation-results/
+*.log

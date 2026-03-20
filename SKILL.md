@@ -1,614 +1,247 @@
 ---
 name: specula-method
 description: |
-  Comprehensive technical guide to SPECULA — a systematic framework for AI governance, control logic, and operational architecture. Use this skill whenever users need to: implement SPECULA governance structures, design AI constitutions and state machines, work with JSON schemas and system specifications, validate SPECULA compliance, architect multi-phase AI workflows, or understand foundational governance principles. Triggers include: references to "SPECULA", "AI constitution", "control logic", "state machine governance", "operational protocols", "system architecture for AI", governance design patterns, or any technical governance/control framework for AI systems. Ideal for researchers, architects, and practitioners designing governed AI systems.
+  Technical implementation guide for the SPECULA governance framework (v0.1).
+
+  In scope: constitutional design, state machine patterns, guard conditions,
+  governance integration patterns, and validation for constitutions/state machines.
+
+  Out of scope (planned for v0.2+): workflow orchestration validation, prompt
+  playbook generation, runtime execution frameworks, and identity/memory layers.
+
+  Use this skill when designing AI governance with constitutions, constraints,
+  guards, and operational state transitions.
 compatibility: |
-  - Deep technical understanding of AI systems architecture
-  - Knowledge of state machines and control systems
-  - Familiarity with JSON schema validation
-  - Systems thinking for multi-phase workflows
+  - AI systems architecture fundamentals
+  - State machine design and control logic
+  - JSON modeling and schema validation
 ---
 
-# SPECULA Method Technical Reference
+# SPECULA Method - Technical Implementation Guide
 
-SPECULA is a comprehensive framework for **governance, control, and operational architecture** of AI systems. It provides systematic approaches to constitution-based governance, state machine control logic, and technical implementation specifications.
+## Scope Statement
 
-## Quick Navigation
+**What this skill covers (v0.1):**
+- Constitution design (principles, values, constraints)
+- State machine operationalization (states, transitions, guards)
+- Guard-to-principle mapping
+- Multi-stakeholder governance patterns
+- JSON schema validation for constitution and state machine artifacts
+- Constitution/state machine integration checks
 
-- **[Foundations](#foundations)** — Conceptual underpinnings and governance principles
-- **[AI Constitution](#ai-constitution)** — Values, principles, behavioral specifications
-- **[Control Logic & State Machines](#control-logic--state-machines)** — Operational governance
-- **[System Architecture](#system-architecture)** — Input/output specifications and flows
-- **[JSON Schemas](#json-schemas)** — Machine-readable specifications
-- **[Prompt Playbook](#prompt-playbook)** — Practical implementation templates
-- **[Technical Implementation Guide](#technical-implementation-guide)** — Step-by-step integration
-
----
+**What is not included yet (planned for future versions):**
+- Workflow orchestration schema/validation
+- Prompt playbook templates
+- Runtime execution trace validation
+- Identity and memory frameworks
 
 ## Foundations
 
-SPECULA rests on core principles:
+SPECULA is a governance-first method for AI systems.
 
-### Core Philosophy
-- **Constitution-First Design**: Explicit governance structures precede implementation
-- **Control Through Logic**: State machines enforce governance rules operationally
-- **Layered Specification**: From high-level principles to machine-readable schemas
-- **Versioning & Precedence**: Clear governance rules for specification conflicts
+Core principles:
+- **Constitution-first design**: define governing intent before implementation
+- **Operational enforcement**: use state transitions and guards to enforce intent
+- **Machine-readable contracts**: represent governance as structured JSON artifacts
+- **Auditability**: preserve explicit reasoning and decision traces
 
-### Key Concepts
-
-**The Specula Stack** (from abstract to concrete):
-1. Conceptual Principles (why)
-2. AI Constitution (what values/behaviors)
-3. State Machine Logic (how control flows)
-4. System Architecture (technical implementation)
-5. JSON Schemas (machine validation)
-6. Prompt Templates (operational execution)
-
----
+The practical stack:
+1. Constitution (principles and constraints)
+2. State machine (operational control logic)
+3. Schemas (machine validation)
+4. Validation tooling (consistency and integration checks)
 
 ## AI Constitution
 
-An AI Constitution in SPECULA defines:
+A SPECULA constitution defines the governance contract.
 
-### Structure
-```
+```text
 Constitution {
+  constitution_id: string
+  version: semver
   principles: [Principle]
-  values: [Value]
   constraints: [Constraint]
-  behavioral_specs: [BehavioralSpec]
-  failure_modes: [FailureMode]
+  values?: [Value]
+  failure_modes?: [FailureMode]
+  conflict_resolution?: ConflictResolution
 }
 ```
 
-### Example Components
-
-**Principle Example**:
-- Name: "Transparency in Reasoning"
-- Description: "AI must articulate its decision process"
-- Enforcement: State machine checkpoint requiring reasoning trace
-
-**Value Example**:
-- Core belief about what matters (e.g., "User autonomy", "System reliability")
-- Operationalized as constraints in state machines
-
-**Constraint Example**:
-- Bounds on behavior (e.g., "Cannot override user preferences without explicit consent")
-- Checked at state transitions
-
-### Implementation
-
-To create a constitution:
-1. **Identify stakeholder values** — what principles matter?
-2. **Formalize as constraints** — how do principles restrict behavior?
-3. **Map to state transitions** — where do constraints apply?
-4. **Define failure modes** — what happens if violated?
-5. **Test against scenarios** — does it work in practice?
-
----
+Implementation process:
+1. Identify stakeholder values.
+2. Convert values into explicit principles.
+3. Operationalize principles with constraints.
+4. Define conflict resolution and failure handling.
+5. Validate with schema and integration checks.
 
 ## Control Logic & State Machines
 
-SPECULA uses **finite state machines** as the operational enforcement layer for governance.
+State machines enforce constitutional intent during runtime decisions.
 
-### State Machine Architecture
-
-```
-StatesMachine {
-  initial_state: State
-  states: {
-    state_name: State
-  }
-  transitions: [Transition]
-  guards: [Guard]
-  actions: [Action]
+```text
+StateMachine {
+  id: string
+  initial_state: string
+  states: map[state_id -> state]
+  transitions?: [Transition]
+  guards?: [Guard]
 }
 ```
 
-### State Definition
-```json
-{
-  "id": "state_identifier",
-  "name": "Descriptive Name",
-  "type": "normal|terminal|error",
-  "entry_actions": ["action1", "action2"],
-  "exit_guards": [
-    {
-      "condition": "constraint to check",
-      "on_fail": "action_or_state"
-    }
-  ],
-  "allowed_transitions": ["state_a", "state_b"]
-}
-```
-
-### Guard Conditions
-
-Guards enforce constitutional constraints at state transitions:
-
-```json
-{
-  "id": "guard_transparency_check",
-  "applies_at": "decision_output",
-  "condition": "reasoning_trace != null AND confidence_score > threshold",
-  "action_on_violation": "escalate_to_human_review",
-  "error_message": "Cannot output decision without reasoning trace"
-}
-```
-
-### Transition Definition
-```json
-{
-  "id": "transition_process_to_decision",
-  "from_state": "processing",
-  "to_state": "decision_output",
-  "trigger": "processing_complete",
-  "preconditions": ["all_guards_pass"],
-  "actions": ["log_decision", "record_timestamp"]
-}
-```
-
-### Multi-Phase Workflows
-
-SPECULA workflows are sequences of state machines:
-
-```json
-{
-  "workflow_id": "governance_workflow_v1",
-  "phases": [
-    {
-      "phase": 1,
-      "name": "input_validation",
-      "state_machine": "input_validation_sm",
-      "on_success": "proceed_to_phase_2",
-      "on_failure": "escalate"
-    },
-    {
-      "phase": 2,
-      "name": "decision_logic",
-      "state_machine": "decision_logic_sm",
-      "constitutional_checks": ["transparency", "consistency"]
-    },
-    {
-      "phase": 3,
-      "name": "output_generation",
-      "state_machine": "output_sm",
-      "constitutional_checks": ["user_autonomy", "harm_prevention"]
-    }
-  ]
-}
-```
-
----
+Key operational rules:
+- Every transition must point to existing states.
+- Terminal states should exist to avoid endless loops.
+- Guards should reference constitutional principles when possible.
+- Unreachable states should be reviewed and justified.
 
 ## System Architecture
 
-### Input Specification
+Typical governed flow:
 
-SPECULA defines structured inputs:
-
-```json
-{
-  "input_schema": {
-    "request_id": "UUID",
-    "timestamp": "ISO8601",
-    "user_context": {
-      "user_id": "string",
-      "permissions": ["list"],
-      "preferences": {}
-    },
-    "query": {
-      "content": "string",
-      "type": "query_type",
-      "context_tags": ["tag1", "tag2"],
-      "constitutional_scope": ["principle1", "principle2"]
-    },
-    "constraints": {
-      "max_reasoning_depth": "integer",
-      "required_confidence": "float[0,1]",
-      "escalation_thresholds": {}
-    }
-  }
-}
+```text
+Input -> Validation -> Constitutional Assessment -> Decision -> Guard Checks -> Output
 ```
 
-### Output Architecture
-
-Governed outputs include:
-
-```json
-{
-  "output_schema": {
-    "request_id": "UUID",
-    "timestamp": "ISO8601",
-    "response": {
-      "content": "string",
-      "type": "response_type",
-      "confidence": "float[0,1]"
-    },
-    "governance_trace": {
-      "constitutional_checks": [
-        {
-          "check_id": "transparency_check_1",
-          "passed": true,
-          "reasoning": "Decision includes reasoning trace"
-        }
-      ],
-      "guards_applied": ["guard_1", "guard_2"],
-      "state_transitions": ["state_a", "state_b", "state_c"]
-    },
-    "reasoning": {
-      "decision_logic": "string",
-      "alternatives_considered": ["alt1", "alt2"],
-      "confidence_justification": "string"
-    },
-    "metadata": {
-      "processing_time_ms": "integer",
-      "model_version": "string",
-      "framework_version": "SPECULA_v2.3"
-    }
-  }
-}
-```
-
-### Data Flow
-
-```
-Input Validation → Constitutional Assessment → Decision Logic → Guard Checks → Output Generation → Governance Trace
-```
-
----
+Recommended output shape includes:
+- response payload
+- confidence/justification
+- governance trace (checks applied, transitions taken)
 
 ## JSON Schemas
 
-SPECULA governance is machine-readable via JSON schemas.
+SPECULA v0.1 provides these schemas:
+- `references/schemas-constitution.json`
+- `references/schemas-statemachine.json`
 
-### Constitution Schema
-See `references/schemas-constitution.json` for the full schema defining:
-- Principles structure
-- Values definition
-- Constraints specification
-- Behavioral requirements
-- Failure mode definitions
+Use schema validation to enforce structural integrity before deeper logic checks.
 
-### State Machine Schema
-See `references/schemas-statemachine.json` for:
-- State definitions
-- Transition rules
-- Guard conditions
-- Action specifications
+## Validation
 
-### Workflow Schema
-See `references/schemas-workflow.json` for:
-- Multi-phase orchestration
-- Phase dependencies
-- Constitutional mappings
+Use the validator for structure and integration checks:
 
-### Validation
-
-To validate a system against SPECULA:
 ```bash
-python scripts/validate_specula.py \
+python3 scripts/validate_specula.py \
   --constitution constitution.json \
-  --state_machine sm.json \
-  --workflow workflow.json
+  --state-machine state-machine.json
 ```
 
----
+Validator checks in v0.1:
+- JSON loading and parse integrity
+- Constitution schema and consistency checks
+- State machine schema and consistency checks
+- Integration checks (principles mapped to guards)
 
-## Prompt Playbook
-
-SPECULA provides **system prompts and phase templates** for operational implementation.
-
-### System Prompt Template
-
-```
-You are operating under the SPECULA governance framework.
-
-Constitution Principles:
-{CONSTITUTION.PRINCIPLES}
-
-Current State: {CURRENT_STATE}
-Allowed Transitions: {ALLOWED_TRANSITIONS}
-
-Required Checks:
-{REQUIRED_GUARDS}
-
-Output Format:
-{OUTPUT_SCHEMA}
-
-Constraints:
-- All decisions MUST include reasoning trace
-- Confidence scores must be justified
-- Constitutional violations trigger escalation
-```
-
-### Phase Prompts
-
-**Phase 1: Input Validation**
-- Validate input against schema
-- Check user permissions
-- Identify constitutional scope
-
-**Phase 2: Decision Logic**
-- Apply decision rules
-- Generate alternatives
-- Calculate confidence
-
-**Phase 3: Constitutional Checks**
-- Verify all guards pass
-- Check principle alignment
-- Log governance trace
-
-**Phase 4: Output Generation**
-- Format per output schema
-- Include reasoning
-- Prepare escalation if needed
-
-See `templates/prompt-playbook-v1.md` for full templates.
-
----
+Exit behavior:
+- Exit `0`: no validation errors
+- Exit `1`: one or more errors
+- Warnings are non-blocking but should be reviewed
 
 ## Technical Implementation Guide
 
-### Step 1: Define Your Constitution
-
-Start by articulating governance principles:
+### Step 1: Define constitution
 
 ```json
 {
-  "constitution": {
-    "id": "my_system_v1",
-    "principles": [
-      {
-        "id": "principle_transparency",
-        "name": "Transparency in Decision-Making",
-        "description": "All outputs must include reasoning",
-        "operationalized_as": ["reasoning_trace_required", "confidence_justification"]
-      }
-    ],
-    "version": "1.0"
-  }
+  "constitution_id": "my_system_v1",
+  "version": "1.0.0",
+  "principles": [
+    {
+      "id": "principle_transparency",
+      "name": "Transparency",
+      "description": "All outputs include reasoning",
+      "operationalized_as": ["reasoning_trace", "confidence_score"]
+    }
+  ]
 }
 ```
 
-### Step 2: Design State Machines
-
-Map each operational phase:
+### Step 2: Design state machine
 
 ```json
 {
-  "id": "decision_flow_sm",
-  "initial_state": "input_received",
+  "id": "decision_workflow_sm",
+  "initial_state": "receive_input",
   "states": {
-    "input_received": {
-      "entry_actions": ["log_input", "validate_schema"],
-      "allowed_transitions": ["validation_passed", "validation_failed"]
-    },
-    "validation_passed": {
+    "receive_input": {
+      "id": "receive_input",
+      "name": "Receive Input",
+      "type": "normal",
       "allowed_transitions": ["constitutional_assessment"]
     },
     "constitutional_assessment": {
-      "entry_actions": ["apply_guards", "check_principles"],
-      "allowed_transitions": ["checks_passed", "checks_failed"]
-    },
-    "decision_generation": {
-      "entry_actions": ["invoke_logic"],
+      "id": "constitutional_assessment",
+      "name": "Constitutional Assessment",
+      "type": "normal",
       "allowed_transitions": ["output_ready"]
     },
     "output_ready": {
-      "type": "terminal",
-      "entry_actions": ["format_output", "record_trace"]
-    },
-    "validation_failed": {
-      "type": "error",
-      "entry_actions": ["escalate", "log_error"]
+      "id": "output_ready",
+      "name": "Output Ready",
+      "type": "terminal"
     }
   },
-  "transitions": [
-    {
-      "from": "input_received",
-      "to": "validation_passed",
-      "trigger": "schema_valid AND permissions_ok",
-      "actions": ["advance"]
-    },
-    {
-      "from": "validation_passed",
-      "to": "constitutional_assessment",
-      "trigger": "proceed",
-      "guards": [{"condition": "all_fields_present"}]
-    }
-  ]
-}
-```
-
-### Step 3: Integrate Governance Checks
-
-Map constitutional principles to guards:
-
-```json
-{
   "guards": [
     {
       "id": "guard_transparency",
+      "condition": "reasoning_trace != null",
       "principle": "principle_transparency",
-      "check": "reasoning_trace != null AND confidence_score >= 0.7",
-      "on_fail": "request_human_review"
-    },
-    {
-      "id": "guard_consistency",
-      "principle": "principle_consistency",
-      "check": "decision_aligns_with_history AND no_contradictions",
-      "on_fail": "flag_for_review"
+      "action_on_violation": "escalate"
     }
   ]
 }
 ```
 
-### Step 4: Implement Output Governance
-
-Ensure all outputs include governance trace:
-
-```json
-{
-  "response": {
-    "content": "...",
-    "governance_trace": {
-      "constitutional_audit": [
-        {"check": "transparency", "status": "pass"},
-        {"check": "consistency", "status": "pass"}
-      ],
-      "state_path": ["input_received", "validation_passed", "constitutional_assessment", "decision_generation"],
-      "guards_applied": ["guard_transparency", "guard_consistency"],
-      "timestamp": "2026-01-15T10:30:00Z"
-    }
-  }
-}
-```
-
-### Step 5: Validate and Test
-
-Use provided validation scripts:
+### Step 3: Validate and iterate
 
 ```bash
-# Validate schema compliance
-python scripts/validate_specula.py --constitution constitution.json
-
-# Test state machine transitions
-python scripts/test_state_machine.py --sm state_machine.json
-
-# Full system test
-python scripts/test_workflow.py --workflow workflow.json
+python3 scripts/validate_specula.py \
+  --constitution my-constitution.json \
+  --state-machine my-state-machine.json
 ```
 
----
-
-## Common Patterns
-
-### Pattern 1: Multi-Stakeholder Governance
-
-When multiple stakeholders have different principles:
-
-```json
-{
-  "constitution": {
-    "stakeholders": ["admin", "user", "auditor"],
-    "principles": {
-      "admin": ["system_stability", "efficiency"],
-      "user": ["autonomy", "transparency"],
-      "auditor": ["compliance", "auditability"]
-    },
-    "conflict_resolution": "weighted_voting"
-  }
-}
-```
-
-### Pattern 2: Escalation Chains
-
-Define what happens when guards fail:
-
-```json
-{
-  "escalation_policy": {
-    "level_1": "log_and_continue",
-    "level_2": "flag_for_review",
-    "level_3": "request_human_intervention",
-    "level_4": "block_and_alert"
-  }
-}
-```
-
-### Pattern 3: Audit Trails
-
-Ensure complete traceability:
-
-```json
-{
-  "audit_requirements": {
-    "log_all_transitions": true,
-    "record_guards_evaluated": true,
-    "capture_reasoning": true,
-    "timestamp_precision": "millisecond"
-  }
-}
-```
-
----
-
-## Resources
-
-- **Full Schemas**: See `references/` directory for JSON schemas
-- **Templates**: See `templates/` directory for example payloads
-- **Validation Scripts**: See `scripts/` directory for tooling
-- **Official Repo**: https://github.com/oddtitoreal/specula-framework
-
-## Versioning
-
-This skill reflects **SPECULA Method v2.3** and follows the framework's precedence and versioning rules.
-
-For version history, see `references/versioning.md`.
-
----
+If warnings appear, decide whether they are intentional design choices or defects.
 
 ## Integration Examples
 
-### Example 1: Simple Decision System
+### Example 1: Simple decision flow
 
-```json
-{
-  "constitution": {
-    "principles": ["transparency", "accuracy"]
-  },
-  "state_machine": {
-    "states": ["receive_input", "validate", "decide", "output"],
-    "guards": [
-      {"state": "output", "check": "confidence > 0.8"}
-    ]
-  }
-}
-```
+- Constitution principles: transparency, accuracy
+- State machine states: input -> assess -> decide -> output
+- Guard at output: block if reasoning trace missing
 
-### Example 2: Complex Multi-Phase Workflow
+### Example 2: Multi-stakeholder governance
 
-```json
-{
-  "workflow": {
-    "phases": [
-      {"name": "intake", "sm": "intake_sm"},
-      {"name": "analysis", "sm": "analysis_sm", "requires": ["transparency_check"]},
-      {"name": "decision", "sm": "decision_sm"},
-      {"name": "delivery", "sm": "delivery_sm", "guard": "guard_final_audit"}
-    ]
-  }
-}
-```
+- Stakeholders: user, operator, auditor
+- Conflict resolution: priority order or weighted voting
+- Escalation path: soft failure -> human review -> block output
 
----
+## Common Patterns
 
-## FAQ & Troubleshooting
+Pattern 1: `Principle -> Constraint -> Guard -> Transition`
 
-**Q: How do I handle conflicting constitutional principles?**
-A: Use the Conflict Resolution system defined in your constitution. SPECULA supports weighted voting, priority ordering, or stakeholder arbitration.
+Pattern 2: Separate hard constraints (`block/escalate`) from soft constraints (`warn/log`).
 
-**Q: Can I modify state machines at runtime?**
-A: No — SPECULA enforces schema validation to prevent unauthorized modifications. Changes require formal versioning and re-validation.
+Pattern 3: Keep transitions explicit when auditing is a requirement.
 
-**Q: How do I audit a system for SPECULA compliance?**
-A: Use `scripts/validate_specula.py` and review the governance trace in outputs. All decisions must include full constitutional audit logs.
+Pattern 4: Add deterministic escalation states for low-confidence or principle violations.
 
-**Q: What's the difference between guards and constraints?**
-A: **Guards** are operational checks at state transitions. **Constraints** are semantic bounds defined in the constitution.
+## FAQ
 
----
+**Q: Can I validate workflows directly in v0.1?**
+A: No. v0.1 validates constitutions and state machines only.
 
-## Next Steps
+**Q: What is the difference between constraints and guards?**
+A: Constraints live in the constitution (policy intent). Guards enforce checks in operational flow.
 
-1. **Define your constitution** — articulate governance principles
-2. **Design state machines** — map operational flows
-3. **Validate schemas** — ensure compliance
-4. **Test workflows** — verify behavior
-5. **Deploy with audit** — capture all governance traces
-6. **Iterate** — refine based on operational feedback
+**Q: Do I need both schema and logical validation?**
+A: Yes. Schema checks structure; logical checks reveal modeling issues and weak governance mappings.
 
-For detailed implementation, see the referenced documents in this skill.
+**Q: Can a guard exist without a principle reference?**
+A: Technically yes, but it should be justified; otherwise governance traceability weakens.
+
+## Resources
+
+- Templates: `templates/example-constitution.json`, `templates/example-state-machine.json`
+- Schemas: `references/schemas-constitution.json`, `references/schemas-statemachine.json`
+- Versioning rules: `references/versioning.md`
+- Validator: `scripts/validate_specula.py`
