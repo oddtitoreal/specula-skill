@@ -405,7 +405,7 @@
       "applies_at_state": "transparency_output",
       "condition": "user_override_option_available OR decision_not_binding",
       "principle": "principle_user_autonomy",
-      "action_on_violation": "warn",
+      "action_on_violation": "log",
       "severity": "high",
       "error_message": "User should have ability to override recommendation"
     },
