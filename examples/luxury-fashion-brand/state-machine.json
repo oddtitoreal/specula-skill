@@ -1,0 +1,141 @@
+{
+  "id": "luxury_brand_assistant_sm",
+  "name": "Luxury Brand Assistant State Machine",
+  "version": "1.0.0",
+  "description": "Operational flow enforcing brand identity constraints.",
+  "initial_state": "receive_customer_inquiry",
+  "states": {
+    "receive_customer_inquiry": {
+      "id": "receive_customer_inquiry",
+      "name": "Receive Customer Inquiry",
+      "type": "normal",
+      "allowed_transitions": ["classify_customer_tier"]
+    },
+    "classify_customer_tier": {
+      "id": "classify_customer_tier",
+      "name": "Classify Customer Tier",
+      "type": "normal",
+      "allowed_transitions": ["brand_voice_alignment_check"]
+    },
+    "brand_voice_alignment_check": {
+      "id": "brand_voice_alignment_check",
+      "name": "Brand Voice Alignment Check",
+      "type": "normal",
+      "allowed_transitions": ["heritage_compatibility_check", "escalate_brand_guardian"]
+    },
+    "heritage_compatibility_check": {
+      "id": "heritage_compatibility_check",
+      "name": "Heritage Compatibility Check",
+      "type": "normal",
+      "allowed_transitions": ["personalization_depth_selection", "escalate_brand_guardian"]
+    },
+    "personalization_depth_selection": {
+      "id": "personalization_depth_selection",
+      "name": "Personalization Depth Selection",
+      "type": "normal",
+      "allowed_transitions": ["generate_response", "escalate_brand_guardian"]
+    },
+    "generate_response": {
+      "id": "generate_response",
+      "name": "Generate Response",
+      "type": "normal",
+      "allowed_transitions": ["response_ready", "escalate_brand_guardian"]
+    },
+    "escalate_brand_guardian": {
+      "id": "escalate_brand_guardian",
+      "name": "Escalate to Brand Guardian",
+      "type": "escalation",
+      "allowed_transitions": ["response_ready"]
+    },
+    "response_ready": {
+      "id": "response_ready",
+      "name": "Response Ready",
+      "type": "terminal"
+    }
+  },
+  "transitions": [
+    {
+      "id": "transition_receive_to_tier",
+      "from_state": "receive_customer_inquiry",
+      "to_state": "classify_customer_tier",
+      "trigger": "inquiry_received"
+    },
+    {
+      "id": "transition_tier_to_voice",
+      "from_state": "classify_customer_tier",
+      "to_state": "brand_voice_alignment_check",
+      "trigger": "tier_classified"
+    },
+    {
+      "id": "transition_voice_to_heritage",
+      "from_state": "brand_voice_alignment_check",
+      "to_state": "heritage_compatibility_check",
+      "trigger": "voice_guard_passed",
+      "guard_ids": ["guard_brand_voice_alignment"]
+    },
+    {
+      "id": "transition_heritage_to_personalization",
+      "from_state": "heritage_compatibility_check",
+      "to_state": "personalization_depth_selection",
+      "trigger": "heritage_guard_passed",
+      "guard_ids": ["guard_heritage_alignment"]
+    },
+    {
+      "id": "transition_personalization_to_generate",
+      "from_state": "personalization_depth_selection",
+      "to_state": "generate_response",
+      "trigger": "exclusivity_guard_passed",
+      "guard_ids": ["guard_exclusivity_enforcement"]
+    },
+    {
+      "id": "transition_generate_to_ready",
+      "from_state": "generate_response",
+      "to_state": "response_ready",
+      "trigger": "response_validated"
+    },
+    {
+      "id": "transition_voice_to_escalation",
+      "from_state": "brand_voice_alignment_check",
+      "to_state": "escalate_brand_guardian",
+      "trigger": "voice_guard_failed",
+      "is_fallback": true
+    }
+  ],
+  "guards": [
+    {
+      "id": "guard_brand_voice_alignment",
+      "name": "Brand Voice Alignment",
+      "applies_to": "state",
+      "applies_at_state": "brand_voice_alignment_check",
+      "condition": "brand_voice_compliant == true",
+      "principle": "principle_brand_voice",
+      "action_on_violation": "block",
+      "severity": "high"
+    },
+    {
+      "id": "guard_heritage_alignment",
+      "name": "Heritage Alignment",
+      "applies_to": "state",
+      "applies_at_state": "heritage_compatibility_check",
+      "condition": "heritage_alignment_passed == true",
+      "principle": "principle_heritage_respect",
+      "action_on_violation": "escalate",
+      "severity": "critical"
+    },
+    {
+      "id": "guard_exclusivity_enforcement",
+      "name": "Exclusivity Enforcement",
+      "applies_to": "state",
+      "applies_at_state": "personalization_depth_selection",
+      "condition": "personalization_depth >= required_depth",
+      "principle": "principle_customer_exclusivity",
+      "action_on_violation": "escalate",
+      "severity": "high"
+    }
+  ],
+  "metadata": {
+    "author": "SPECULA Team",
+    "framework_version": "SPECULA_v2.3",
+    "example": "luxury-fashion-brand"
+  }
+}

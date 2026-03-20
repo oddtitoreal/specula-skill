@@ -1,0 +1,12 @@
+Validating constitution: examples/luxury-fashion-brand/constitution.json
+Validating state machine: examples/luxury-fashion-brand/state-machine.json
+Validating constitution-state machine integration...
+
+======================================================================
+SPECULA VALIDATION REPORT
+======================================================================
+
+⚠️  WARNINGS (1):
+  - python package 'jsonschema' is not installed; schema validation skipped
+
+======================================================================

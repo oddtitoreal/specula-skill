@@ -26,6 +26,8 @@ This repository is the technical core of SPECULA v0.1.
 - JSON schema validation (constitution + state machine)
 - Constitution/state machine integration checks
 - Working templates and validator tool
+- Manifesto and method layers (`SPECULA-MANIFESTO.md`, `METHOD.md`)
+- Domain example: luxury-fashion-brand identity-as-law implementation
 
 ## What's Not In v0.1.0
 
@@ -34,10 +36,21 @@ This repository is the technical core of SPECULA v0.1.
 - Runtime execution trace validation (planned v0.2+)
 - Identity/memory frameworks (planned v0.3+)
 
+
+## Understanding SPECULA: Three Layers
+
+1. [SPECULA Manifesto](./SPECULA-MANIFESTO.md) - Philosophy and vision
+2. [SPECULA Method](./METHOD.md) - Design methodology and patterns
+3. [Technical Skill (This Repository)](./SKILL.md) - Implementable artifacts and validation
+
+Use layers 1-2 for context, then layer 3 for implementation.
+
 ## Repository Layout
 
 ```text
 specula-skill/
+├── SPECULA-MANIFESTO.md
+├── METHOD.md
 ├── SKILL.md
 ├── README.md
 ├── CHANGELOG.md
@@ -52,6 +65,14 @@ specula-skill/
 ├── templates/
 │   ├── example-constitution.json
 │   └── example-state-machine.json
+├── examples/
+│   ├── README.md
+│   └── luxury-fashion-brand/
+│       ├── README.md
+│       ├── brand-values.md
+│       ├── constitution.json
+│       ├── state-machine.json
+│       └── validation-results.txt
 └── docs/
     └── specula-documentazione.html
 ```
@@ -82,6 +103,14 @@ python3 scripts/validate_specula.py \
   --state-machine your-state-machine.json
 ```
 
+4. Validate the identity-as-law example:
+
+```bash
+python3 scripts/validate_specula.py \
+  --constitution examples/luxury-fashion-brand/constitution.json \
+  --state-machine examples/luxury-fashion-brand/state-machine.json
+```
+
 ## Validator Behavior
 
 `/scripts/validate_specula.py` performs:
@@ -105,7 +134,7 @@ Warnings are non-blocking but should be reviewed.
 ### v0.2 (Q2 2026)
 - Workflow validation
 - Prompt playbook templates
-- Brand-specific examples
+- Additional domain-specific example packs
 
 ### v0.3 (Q3 2026)
 - Identity and memory frameworks
