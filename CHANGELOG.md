@@ -2,6 +2,15 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.1.1] - 2026-03-20
+
+### Fixed
+- Aligned `templates/example-state-machine.json` with state-machine schema enum:
+  `guards[].action_on_violation` now uses `log` instead of invalid `warn`.
+
+### Notes
+- This patch release ensures template validation passes with `jsonschema` enabled.
+
 ## [0.1.0] - 2026-03-20
 
 ### Added
