@@ -1,10 +1,10 @@
 # SPECULA Governance Framework
 
-![Version 0.1.1](https://img.shields.io/badge/version-0.1.1-blue)
+![Version 0.1.2](https://img.shields.io/badge/version-0.1.2-blue)
 ![Status Initial Release](https://img.shields.io/badge/status-initial%20release-brightgreen)
 ![License MIT](https://img.shields.io/badge/license-MIT-green)
 
-**Version**: 0.1.1  
+**Version**: 0.1.2  
 **Release Date**: 2026-03-20  
 **Status**: Initial Release - Constitutional Governance Core
 
@@ -17,6 +17,27 @@ Technical framework for designing and validating AI governance using:
 - schema and consistency validation
 
 This repository is the technical core of SPECULA v0.1.
+
+## SPECULA Ecosystem
+
+This repository is one of three related SPECULA repositories:
+
+| Repository | Primary purpose | Primary audience |
+|---|---|---|
+| [`specula-framework`](https://github.com/oddtitoreal/specula-framework) | Canonical docs/specs/schemas/runtime profile | Governance architects, contributors, technical leads |
+| [`specula-method`](https://github.com/oddtitoreal/specula-method) | Strategic foresight branding method and facilitation profile | Strategists, designers, innovation teams |
+| `specula-skill` (this repo) | Constitution/state-machine implementation skill | AI engineers, governance implementers |
+
+Choose your entry point:
+- If you need practical constitution/state-machine implementation examples: start here.
+- If you need canonical governance specs and runtime contracts: go to `specula-framework`.
+- If you need facilitation and method process: go to `specula-method`.
+
+## Who This Is For
+
+- AI engineers implementing governance controls
+- Governance architects operationalizing constitutions into state logic
+- Teams validating constitution/state-machine alignment before runtime integration
 
 ## What's In v0.1.x
 
