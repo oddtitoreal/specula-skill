@@ -1,10 +1,10 @@
 # SPECULA Governance Framework
 
-![Version 0.1.0](https://img.shields.io/badge/version-0.1.0-blue)
+![Version 0.1.1](https://img.shields.io/badge/version-0.1.1-blue)
 ![Status Initial Release](https://img.shields.io/badge/status-initial%20release-brightgreen)
 ![License MIT](https://img.shields.io/badge/license-MIT-green)
 
-**Version**: 0.1.0  
+**Version**: 0.1.1  
 **Release Date**: 2026-03-20  
 **Status**: Initial Release - Constitutional Governance Core
 
@@ -18,7 +18,7 @@ Technical framework for designing and validating AI governance using:
 
 This repository is the technical core of SPECULA v0.1.
 
-## What's In v0.1.0
+## What's In v0.1.x
 
 - Constitutional design patterns (principles, values, constraints)
 - State machine operationalization (states, transitions, guards)
@@ -29,7 +29,7 @@ This repository is the technical core of SPECULA v0.1.
 - Manifesto and method layers (`SPECULA-MANIFESTO.md`, `METHOD.md`)
 - Domain example: luxury-fashion-brand identity-as-law implementation
 
-## What's Not In v0.1.0
+## What's Not In v0.1.x
 
 - Workflow orchestration validation (planned v0.2)
 - Prompt playbook/template generation (planned v0.2)
@@ -45,10 +45,19 @@ This repository is the technical core of SPECULA v0.1.
 
 Use layers 1-2 for context, then layer 3 for implementation.
 
+## Coherence with Method/Framework
+
+This repository is aligned to:
+- [specula-framework](https://github.com/oddtitoreal/specula-framework) for canonical runtime terminology and governance direction
+- [specula-method](https://github.com/oddtitoreal/specula-method) for open method and phase semantics
+
+Formal mapping and scope boundary are documented in [ALIGNMENT.md](./ALIGNMENT.md).
+
 ## Repository Layout
 
 ```text
 specula-skill/
+├── ALIGNMENT.md
 ├── SPECULA-MANIFESTO.md
 ├── METHOD.md
 ├── SKILL.md
@@ -135,6 +144,7 @@ Warnings are non-blocking but should be reviewed.
 - Workflow validation
 - Prompt playbook templates
 - Additional domain-specific example packs
+- Runtime wrapper bridge (`meta/payload`) for interoperability
 
 ### v0.3 (Q3 2026)
 - Identity and memory frameworks
@@ -151,3 +161,4 @@ Warnings are non-blocking but should be reviewed.
 - Governance artifact versioning rules: `references/versioning.md`
 - Canonical technical reference for the skill: `SKILL.md`
 - Templates are starting points and should be adapted per domain.
+- For attribution/licensing boundary against `specula-method`, see `ALIGNMENT.md`.

@@ -51,6 +51,17 @@ After the answer:
 - Runtime execution trace validation
 - Identity and memory frameworks
 
+## Canonical Alignment / Allineamento Canonico
+
+This skill aligns with:
+- `specula-method` for public method semantics and phase narrative
+- `specula-framework` for canonical runtime terminology
+
+Current boundary in v0.1.x:
+- This skill validates constitution + state-machine artifacts.
+- It does not enforce runtime wrapper contracts (`meta/payload`) or phase-mode headers (`MODE | PHASE`).
+- Detailed mapping is maintained in `ALIGNMENT.md`.
+
 ## Foundations / Fondamenti
 
 EN:

@@ -2,6 +2,16 @@
 
 All notable changes to this project are documented in this file.
 
+## [Unreleased]
+
+### Added
+- `ALIGNMENT.md` with explicit mapping between `specula-skill`, `specula-framework`, and `specula-method`.
+
+### Changed
+- README updated to `v0.1.1` and clarified profile boundary and interoperability scope.
+- SKILL documentation updated with canonical alignment section.
+- `examples/luxury-fashion-brand/validation-results.txt` refreshed after schema-enabled validation.
+
 ## [0.1.1] - 2026-03-20
 
 ### Fixed

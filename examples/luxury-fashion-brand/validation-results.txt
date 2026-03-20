@@ -6,7 +6,6 @@ Validating constitution-state machine integration...
 SPECULA VALIDATION REPORT
 ======================================================================
 
-⚠️  WARNINGS (1):
-  - python package 'jsonschema' is not installed; schema validation skipped
+✅ All validations passed!
 
 ======================================================================
