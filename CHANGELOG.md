@@ -2,6 +2,18 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.2.0-scaffold] - 2026-03-27
+
+### Added
+- `validate_workflow()` method in `scripts/validate_specula.py` (v0.2-scaffold). Validates Specula workflow JSON files for: required top-level fields (`workflow_id`, `project_id`, `phases`), valid phase IDs against the canonical sequence, dual-role requirement (at least 2 distinct `validation_roles` per phase), valid prerequisite references, and Phase 5/6 specific warnings (missing `dissent_protocol`, missing `re_speculation_trigger`).
+- `--workflow` CLI flag to invoke workflow validation from the command line.
+- Updated module docstring to reflect v0.2-scaffold scope and planned v0.2 full / v0.3+ roadmap.
+
+### Notes
+- This scaffold release marks the start of v0.2 development. The `validate_workflow()` method validates structure only — runtime execution trace validation is planned for v0.2 full.
+- Prompt playbook generation (also planned for v0.2) is not included in this scaffold.
+- All v0.1.x validations (constitution, state machine, integration) remain unchanged and backward compatible.
+
 ## [0.1.2] - 2026-03-20
 
 ### Added

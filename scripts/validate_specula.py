@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SPECULA Validation Tool (v0.1)
+SPECULA Validation Tool (v0.1.2 / v0.2-scaffold)
 
 Validates SPECULA governance structures against JSON schemas and consistency rules.
 
@@ -10,9 +10,18 @@ CAPABILITIES (v0.1):
 - Guard-to-principle mapping
 - Constitution/state machine integration verification
 
-PLANNED (v0.2+):
-- Workflow orchestration validation
+CAPABILITIES (v0.2-scaffold — in progress):
+- Workflow orchestration validation (structure only, not runtime execution)
+  validate_workflow() checks: required phase sequence, prerequisite mapping,
+  validation gate presence, and dual-role requirement fields.
+
+PLANNED (v0.2 full):
+- Prompt playbook generation from constitution + state machine
+- Runtime wrapper bridge for framework MVP compatibility
+
+PLANNED (v0.3+):
 - Runtime execution trace validation
+- Identity/memory framework validation
 """
 
 from __future__ import annotations
@@ -282,6 +291,114 @@ class SPECULAValidator:
 
         return len(self.errors) == 0
 
+    def validate_workflow(self, workflow_path: str) -> bool:
+        """Validate a Specula workflow definition (v0.2-scaffold).
+
+        A Specula workflow file is a JSON document that describes how a project
+        moves through the canonical phase sequence, who the validation roles are,
+        and what prerequisites must be satisfied before each phase can begin.
+
+        This method validates the *structure* of the workflow (not runtime execution).
+        Full runtime validation is planned for v0.2 final.
+
+        Expected workflow schema (minimum):
+        {
+          "workflow_id": "<string>",
+          "project_id": "<string>",
+          "phases": [
+            {
+              "phase": "<phase_id>",            # must be one of SPECULA_PHASES
+              "prerequisites": [...],            # list of phase_ids
+              "validation_roles": [...],         # at least 2 distinct roles
+              "mode": "<mode>"                   # optional, documented
+            }
+          ]
+        }
+        """
+        SPECULA_PHASES = {"0", "1", "1.5", "2", "3", "4", "5", "6"}
+        print(f"Validating workflow: {workflow_path}")
+        try:
+            workflow = self._load_json(workflow_path)
+        except ValueError as e:
+            self.errors.append(str(e))
+            return False
+
+        # Required top-level fields
+        for field in ("workflow_id", "project_id", "phases"):
+            if field not in workflow:
+                self.errors.append(f"Workflow missing required field: '{field}'")
+
+        phases = workflow.get("phases", [])
+        if not isinstance(phases, list) or len(phases) == 0:
+            self.errors.append("Workflow 'phases' must be a non-empty list")
+            return len(self.errors) == 0
+
+        seen_phases = set()
+        for idx, phase_entry in enumerate(phases):
+            if not isinstance(phase_entry, dict):
+                self.errors.append(f"Workflow phases[{idx}] must be an object")
+                continue
+
+            phase_id = str(phase_entry.get("phase", "")).strip()
+            if not phase_id:
+                self.errors.append(f"Workflow phases[{idx}] is missing 'phase' field")
+                continue
+
+            if phase_id not in SPECULA_PHASES:
+                self.errors.append(
+                    f"Workflow phases[{idx}] has unknown phase '{phase_id}'. "
+                    f"Valid phases: {sorted(SPECULA_PHASES)}"
+                )
+
+            if phase_id in seen_phases:
+                self.errors.append(f"Workflow phases[{idx}] duplicates phase '{phase_id}'")
+            seen_phases.add(phase_id)
+
+            # Dual-role validation requirement: at least 2 distinct roles must be named
+            validation_roles = phase_entry.get("validation_roles", [])
+            if not isinstance(validation_roles, list):
+                self.errors.append(f"Phase '{phase_id}': 'validation_roles' must be a list")
+            else:
+                unique_roles = {str(r).strip().lower() for r in validation_roles if str(r).strip()}
+                if len(unique_roles) < 2:
+                    self.errors.append(
+                        f"Phase '{phase_id}': 'validation_roles' must name at least 2 distinct roles "
+                        "(dual-validation requirement). Found: "
+                        + str(list(unique_roles) or ["(none)"])
+                    )
+
+            # Prerequisites must reference known phases
+            prerequisites = phase_entry.get("prerequisites", [])
+            if not isinstance(prerequisites, list):
+                self.errors.append(f"Phase '{phase_id}': 'prerequisites' must be a list")
+            else:
+                for prereq in prerequisites:
+                    prereq_str = str(prereq).strip()
+                    if prereq_str not in SPECULA_PHASES:
+                        self.errors.append(
+                            f"Phase '{phase_id}': prerequisite '{prereq_str}' is not a valid Specula phase"
+                        )
+
+        # Warn if Phase 5 (community co-creation) does not explicitly list dissent_protocol
+        phase_5_entries = [p for p in phases if str(p.get("phase", "")).strip() == "5"]
+        for p5 in phase_5_entries:
+            if "dissent_protocol" not in p5:
+                self.warnings.append(
+                    "Phase '5' (Community Co-Creation) does not declare 'dissent_protocol'. "
+                    "This field is strongly recommended to prevent theater consultation."
+                )
+
+        # Warn if Phase 6 (Guardian) does not declare re_speculation_trigger
+        phase_6_entries = [p for p in phases if str(p.get("phase", "")).strip() == "6"]
+        for p6 in phase_6_entries:
+            if "re_speculation_trigger" not in p6:
+                self.warnings.append(
+                    "Phase '6' (Guardian) does not declare 're_speculation_trigger'. "
+                    "Specify which divergence_level values trigger a mandatory re-speculation cycle."
+                )
+
+        return len(self.errors) == 0
+
     def print_report(self):
         """Print validation report."""
         print("\n" + "=" * 70)
@@ -309,6 +426,11 @@ def main():
     parser = argparse.ArgumentParser(description="SPECULA Governance Framework Validator")
     parser.add_argument("--constitution", help="Path to constitution JSON file")
     parser.add_argument("--state-machine", help="Path to state machine JSON file")
+    parser.add_argument(
+        "--workflow",
+        help="Path to a Specula workflow JSON file (v0.2-scaffold). "
+             "Validates phase sequence, prerequisites, and dual-role requirements.",
+    )
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
 
     args = parser.parse_args()
@@ -328,6 +450,10 @@ def main():
 
     if args.constitution and args.state_machine:
         if not validator.validate_integration(args.constitution, args.state_machine):
+            valid = False
+
+    if args.workflow:
+        if not validator.validate_workflow(args.workflow):
             valid = False
 
     validator.print_report()
