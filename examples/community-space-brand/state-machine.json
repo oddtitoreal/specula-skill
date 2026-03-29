@@ -1,0 +1,193 @@
+{
+  "id": "community_space_brand_sm",
+  "name": "Il posto delle fragole — Community Space State Machine",
+  "version": "1.0.0",
+  "description": "Operational state machine derived from the brand's living system architecture. States map to the four space configurations defined in the brand manual. Guards enforce radical values at each transition.",
+  "initial_state": "receive_request",
+  "states": {
+    "receive_request": {
+      "id": "receive_request",
+      "name": "Receive Request",
+      "type": "normal",
+      "allowed_transitions": ["classify_persona_mode"]
+    },
+    "classify_persona_mode": {
+      "id": "classify_persona_mode",
+      "name": "Classify Persona Mode",
+      "description": "Identify whether the interaction is from Esploratori (discovering, energy in movement), Attivatori (producing, energy structures), or Garanti (enabling, energy stabilises) mode.",
+      "type": "normal",
+      "allowed_transitions": ["non_judgment_check"]
+    },
+    "non_judgment_check": {
+      "id": "non_judgment_check",
+      "name": "Non-Judgment Check",
+      "type": "normal",
+      "allowed_transitions": ["enabling_check", "block_stigmatizing_output"]
+    },
+    "enabling_check": {
+      "id": "enabling_check",
+      "name": "Enabling Check",
+      "description": "Verify response provides infrastructure (tools, access, resources), not just reassurance or assistance.",
+      "type": "normal",
+      "allowed_transitions": ["space_state_selection", "escalate_community_guardian"]
+    },
+    "space_state_selection": {
+      "id": "space_state_selection",
+      "name": "Space State Selection",
+      "description": "Select the appropriate activation state: essenziale, modulare, denso, or gestuale. Each state carries different intensity, color weight, and interaction mode.",
+      "type": "normal",
+      "allowed_transitions": ["generate_response"]
+    },
+    "generate_response": {
+      "id": "generate_response",
+      "name": "Generate Response",
+      "type": "normal",
+      "allowed_transitions": ["response_ready", "escalate_community_guardian"]
+    },
+    "block_stigmatizing_output": {
+      "id": "block_stigmatizing_output",
+      "name": "Block Stigmatizing Output",
+      "type": "escalation",
+      "allowed_transitions": ["generate_response"]
+    },
+    "escalate_community_guardian": {
+      "id": "escalate_community_guardian",
+      "name": "Escalate to Community Guardian",
+      "type": "escalation",
+      "allowed_transitions": ["response_ready"]
+    },
+    "response_ready": {
+      "id": "response_ready",
+      "name": "Response Ready",
+      "type": "terminal"
+    }
+  },
+  "transitions": [
+    {
+      "id": "t_receive_to_classify",
+      "from_state": "receive_request",
+      "to_state": "classify_persona_mode",
+      "trigger": "request_received"
+    },
+    {
+      "id": "t_classify_to_judgment",
+      "from_state": "classify_persona_mode",
+      "to_state": "non_judgment_check",
+      "trigger": "persona_mode_identified"
+    },
+    {
+      "id": "t_judgment_pass",
+      "from_state": "non_judgment_check",
+      "to_state": "enabling_check",
+      "trigger": "judgment_guard_passed",
+      "guard_ids": ["guard_non_judgment"]
+    },
+    {
+      "id": "t_judgment_fail",
+      "from_state": "non_judgment_check",
+      "to_state": "block_stigmatizing_output",
+      "trigger": "judgment_guard_failed",
+      "is_fallback": true
+    },
+    {
+      "id": "t_enabling_pass",
+      "from_state": "enabling_check",
+      "to_state": "space_state_selection",
+      "trigger": "enabling_guard_passed",
+      "guard_ids": ["guard_enabling"]
+    },
+    {
+      "id": "t_enabling_escalate",
+      "from_state": "enabling_check",
+      "to_state": "escalate_community_guardian",
+      "trigger": "enabling_guard_failed",
+      "is_fallback": true
+    },
+    {
+      "id": "t_state_to_generate",
+      "from_state": "space_state_selection",
+      "to_state": "generate_response",
+      "trigger": "space_state_selected"
+    },
+    {
+      "id": "t_generate_to_ready",
+      "from_state": "generate_response",
+      "to_state": "response_ready",
+      "trigger": "response_validated",
+      "guard_ids": ["guard_no_performance_pressure"]
+    },
+    {
+      "id": "t_block_to_retry",
+      "from_state": "block_stigmatizing_output",
+      "to_state": "generate_response",
+      "trigger": "output_revised"
+    },
+    {
+      "id": "t_escalation_to_ready",
+      "from_state": "escalate_community_guardian",
+      "to_state": "response_ready",
+      "trigger": "guardian_approved"
+    }
+  ],
+  "guards": [
+    {
+      "id": "guard_non_judgment",
+      "name": "Non-Judgment Guard",
+      "applies_to": "state",
+      "applies_at_state": "non_judgment_check",
+      "condition": "no_stigmatizing_language AND no_moralizing_tone AND people_before_labels",
+      "principle": "principle_non_judgment",
+      "action_on_violation": "block",
+      "severity": "high"
+    },
+    {
+      "id": "guard_enabling",
+      "name": "Enabling Guard",
+      "applies_to": "state",
+      "applies_at_state": "enabling_check",
+      "condition": "response_provides_infrastructure OR response_provides_tools OR response_provides_access",
+      "principle": "principle_enabling",
+      "action_on_violation": "escalate",
+      "severity": "medium"
+    },
+    {
+      "id": "guard_no_performance_pressure",
+      "name": "No Performance Pressure Guard",
+      "applies_to": "transition",
+      "applies_at_state": "generate_response",
+      "condition": "content_non_competitive AND no_achievement_framing AND no_ranking",
+      "principle": "principle_imagination_in_practice",
+      "action_on_violation": "revise",
+      "severity": "high"
+    }
+  ],
+  "space_states": {
+    "essenziale": {
+      "description": "When only what matters remains. Minimal activation.",
+      "tone": "quiet, essential, grounding",
+      "color_weight": {"sand": 0.75, "white": 0.2, "green": 0.05, "red": 0.0}
+    },
+    "modulare": {
+      "description": "When the community builds together. Structured activation.",
+      "tone": "collaborative, structured, enabling",
+      "color_weight": {"sand": 0.6, "white": 0.15, "green": 0.2, "black": 0.05, "red": 0.0}
+    },
+    "denso": {
+      "description": "When the space is full of relationships. High presence.",
+      "tone": "warm, present, relational",
+      "color_weight": {"sand": 0.55, "white": 0.15, "green": 0.15, "black": 0.1, "red": 0.05}
+    },
+    "gestuale": {
+      "description": "When something spontaneous happens. Emergent activation.",
+      "tone": "spontaneous, energetic, open",
+      "color_weight": {"sand": 0.5, "white": 0.15, "green": 0.15, "black": 0.1, "red": 0.1}
+    }
+  },
+  "metadata": {
+    "author": "Specula Future Crafting",
+    "framework_version": "SPECULA_v2.3",
+    "example": "community-space-brand",
+    "fictional_example": false,
+    "source": "Derived from Brand Manual + strategic synthesis — Il posto delle fragole, Pesaro 2026"
+  }
+}

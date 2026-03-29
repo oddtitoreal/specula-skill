@@ -10,13 +10,13 @@
 
 ## What This Is
 
-Technical framework for designing and validating AI governance using:
-- constitutional principles
-- operational state-machine control logic
-- explicit guard conditions
-- schema and consistency validation
+*Your AI agent has no explicit governance. Here's how to give it one — with validation.*
+
+Technical framework for designing and validating AI governance using constitutional principles, operational state-machine control logic, explicit guard conditions, and schema/consistency validation.
 
 This repository is the technical core of SPECULA v0.1.
+
+> **New here?** Start from the [Quick Start guide](./QUICKSTART.md) · [Avvio rapido (IT)](./QUICKSTART.it.md)
 
 ## SPECULA Ecosystem
 
@@ -48,7 +48,7 @@ Choose your entry point:
 - Constitution/state machine integration checks
 - Working templates and validator tool
 - Manifesto and method layers (`SPECULA-MANIFESTO.md`, `METHOD.md`)
-- Domain example: luxury-fashion-brand identity-as-law implementation
+- Domain examples: luxury-fashion-brand (fictional) and community-space-brand (real, derived from Specula Method)
 
 ## What's Not In v0.1.x
 

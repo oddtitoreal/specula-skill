@@ -1,0 +1,157 @@
+{
+  "constitution_id": "community_space_brand_v1",
+  "version": "1.0.0",
+  "name": "Il posto delle fragole — Community Space Constitution",
+  "description": "Real SPECULA example. Governance constitution derived from Brand Archeology for a community space in Pesaro, Italy. Values extracted from co-design process and translated from descriptive to operational form.",
+  "principles": [
+    {
+      "id": "principle_habitability",
+      "name": "Abitabilità (Habitability)",
+      "description": "Every decision must prioritize quality of being together over operational efficiency. If it doesn't improve the quality of shared presence, it's not a valid choice.",
+      "priority": 1,
+      "operationalized_as": [
+        "relational_quality_check",
+        "non_performance_check"
+      ]
+    },
+    {
+      "id": "principle_non_judgment",
+      "name": "Non Giudizio (Non-Judgment)",
+      "description": "People come before labels. Clear limits without stigma. Respect without moralism.",
+      "priority": 1,
+      "operationalized_as": [
+        "tone_stigma_check",
+        "label_avoidance_check"
+      ]
+    },
+    {
+      "id": "principle_enabling",
+      "name": "Abilitazione (Enabling)",
+      "description": "Care is infrastructure, not assistance. Access to powerful tools in a welcoming environment. Enablement creates capacity; assistance creates dependency.",
+      "priority": 1,
+      "operationalized_as": [
+        "care_as_infrastructure_check",
+        "youth_co_ownership_check"
+      ]
+    },
+    {
+      "id": "principle_imagination_in_practice",
+      "name": "Immaginazione in Pratica (Imagination in Practice)",
+      "description": "Imagination is a tool, not an escape. Creative risk is a right, not a performance. Here you try, fail, improve — without labels, with clear limits.",
+      "priority": 2,
+      "operationalized_as": [
+        "creative_risk_support_check",
+        "no_performance_pressure_check"
+      ]
+    },
+    {
+      "id": "principle_living_community",
+      "name": "Comunità Viva (Living Community)",
+      "description": "We cultivate returns, not consumed experiences. Relationships persist. Continuity, trust, presence.",
+      "priority": 2,
+      "operationalized_as": [
+        "continuity_check",
+        "relationship_depth_check"
+      ]
+    }
+  ],
+  "constraints": [
+    {
+      "id": "constraint_no_ownership_asymmetry",
+      "constraint_type": "hard",
+      "rule": "Programming decisions cannot be made without direct youth input or co-governance.",
+      "principle": "principle_enabling",
+      "severity_on_violation": "critical",
+      "action_on_violation": "escalate_to_community_guardian"
+    },
+    {
+      "id": "constraint_no_stigmatizing_language",
+      "constraint_type": "hard",
+      "rule": "Communication cannot use labels, stigmatizing language, or moralizing tone.",
+      "principle": "principle_non_judgment",
+      "severity_on_violation": "high",
+      "action_on_violation": "block_output"
+    },
+    {
+      "id": "constraint_no_performance_pressure",
+      "constraint_type": "hard",
+      "rule": "Activation content must not imply performance expectations, rankings, or competitive framing.",
+      "principle": "principle_imagination_in_practice",
+      "severity_on_violation": "high",
+      "action_on_violation": "revise_response"
+    },
+    {
+      "id": "constraint_relational_quality_over_attendance",
+      "constraint_type": "soft",
+      "rule": "Decisions optimising for attendance at the cost of relational quality require community_guardian review.",
+      "principle": "principle_habitability",
+      "severity_on_violation": "medium",
+      "action_on_violation": "flag_for_review"
+    },
+    {
+      "id": "constraint_activation_color_ratio",
+      "constraint_type": "hard",
+      "rule": "Red (activation) must never exceed 5% of visual or spatial presence. Its power is in its rarity.",
+      "principle": "principle_habitability",
+      "severity_on_violation": "high",
+      "action_on_violation": "revise_response"
+    }
+  ],
+  "stakeholders": [
+    {
+      "id": "community_guardian",
+      "name": "Community Guardian (youth co-governance)",
+      "weight": 0.45
+    },
+    {
+      "id": "partner_organizations",
+      "name": "Partner Organizations (ARCI, LiberaMusica, Labirinto, Fondazione Wanda)",
+      "weight": 0.35
+    },
+    {
+      "id": "neighbourhood",
+      "name": "Quartiere San Martino community",
+      "weight": 0.2
+    }
+  ],
+  "conflict_resolution": {
+    "strategy": "priority_order",
+    "priority_order": [
+      "principle_habitability",
+      "principle_non_judgment",
+      "principle_enabling",
+      "principle_imagination_in_practice",
+      "principle_living_community"
+    ]
+  },
+  "registry_of_refusals": [
+    {
+      "refusal_id": "refusal_ownership_asymmetry",
+      "description": "The space will not become one where young people are users of adult-designed services.",
+      "logged_at": "phase_2_brand_archeology"
+    },
+    {
+      "refusal_id": "refusal_performance_brand",
+      "description": "The brand will not promise performance. It promises presence.",
+      "logged_at": "phase_2_brand_archeology"
+    },
+    {
+      "refusal_id": "refusal_attendance_over_quality",
+      "description": "Success will not be measured only by attendance numbers.",
+      "logged_at": "phase_3_ethical_gate"
+    },
+    {
+      "refusal_id": "refusal_adult_reassurance_over_youth_recognition",
+      "description": "Communication will not prioritize adult stakeholder comfort over Gen Z recognition.",
+      "logged_at": "phase_3_ethical_gate"
+    }
+  ],
+  "metadata": {
+    "framework_version": "SPECULA_v2.3",
+    "example_purpose": "Real community space brand governance derived from co-design and Specula Method Brand Archeology",
+    "fictional_example": false,
+    "client": "Il posto delle fragole — Via Ponchielli 81, Pesaro",
+    "method_phases_applied": ["1.5", "2", "3_partial", "4"],
+    "attribution": "Specula Future Crafting"
+  }
+}
