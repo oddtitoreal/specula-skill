@@ -88,15 +88,23 @@ def test_real_examples_exist():
     assert REAL_EXAMPLES, "no real (non-fictional) examples found to test"
 
 
-def test_activation_color_ratio_respected_in_space_states():
-    """Data must obey the hard constraint that guard_activation_color_ratio enforces:
-    red (activation) never exceeds 5% in any declared space state."""
-    sm = json.loads(
-        (EXAMPLES / "community-space-brand" / "state-machine.json").read_text(encoding="utf-8")
-    )
+# Hard constraint (constraint_activation_color_ratio): red activation <= 5%.
+MAX_RED_ACTIVATION_RATIO = 0.05
+
+
+@pytest.mark.parametrize("example_dir", REAL_EXAMPLES, ids=lambda p: p.name)
+def test_activation_color_ratio_respected_in_space_states(example_dir):
+    """Every real example must obey the hard constraint that
+    guard_activation_color_ratio enforces: red (activation) never exceeds 5%
+    in any declared space state. Generic across real examples so a future
+    over-threshold configuration fails CI, not just the current one."""
+    sm = json.loads((example_dir / "state-machine.json").read_text(encoding="utf-8"))
+    space_states = sm.get("space_states", {})
+    if not space_states:
+        pytest.skip(f"{example_dir.name} declares no space_states")
     offenders = {
-        name: cfg["color_weight"].get("red", 0.0)
-        for name, cfg in sm.get("space_states", {}).items()
-        if cfg.get("color_weight", {}).get("red", 0.0) > 0.05
+        name: cfg.get("color_weight", {}).get("red", 0.0)
+        for name, cfg in space_states.items()
+        if cfg.get("color_weight", {}).get("red", 0.0) > MAX_RED_ACTIVATION_RATIO
     }
-    assert not offenders, f"space states exceeding 5% red: {offenders}"
+    assert not offenders, f"{example_dir.name} space states exceeding 5% red: {offenders}"
