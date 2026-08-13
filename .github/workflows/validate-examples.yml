@@ -1,0 +1,57 @@
+name: Validate Examples
+
+on:
+  push:
+    paths:
+      - "examples/**"
+      - "references/**"
+      - "scripts/validate_specula.py"
+      - ".github/workflows/validate-examples.yml"
+  pull_request:
+    paths:
+      - "examples/**"
+      - "references/**"
+      - "scripts/validate_specula.py"
+      - ".github/workflows/validate-examples.yml"
+  workflow_dispatch:
+
+jobs:
+  validate-examples:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Validate every example (constitution + state machine + integration)
+        shell: bash
+        run: |
+          set -euo pipefail
+          status=0
+          for dir in examples/*/; do
+            const="${dir}constitution.json"
+            sm="${dir}state-machine.json"
+            if [[ -f "$const" && -f "$sm" ]]; then
+              echo "::group::Validating ${dir}"
+              if ! python scripts/validate_specula.py \
+                    --constitution "$const" \
+                    --state-machine "$sm"; then
+                status=1
+              fi
+              echo "::endgroup::"
+            fi
+          done
+          if [[ "$status" -ne 0 ]]; then
+            echo "One or more examples failed schema/consistency validation."
+            exit 1
+          fi
+          echo "All examples passed schema and consistency validation."
