@@ -130,7 +130,11 @@
       "id": "transition_state_to_generate",
       "from_state": "space_state_selection",
       "to_state": "generate_response",
-      "trigger": "space_state_selected"
+      "trigger": "space_state_selected",
+      "guard_ids": [
+        "guard_relational_quality",
+        "guard_activation_color_ratio"
+      ]
     },
     {
       "id": "transition_generate_to_ready",
@@ -138,7 +142,8 @@
       "to_state": "response_ready",
       "trigger": "response_validated",
       "guard_ids": [
-        "guard_no_performance_pressure"
+        "guard_no_performance_pressure",
+        "guard_living_community"
       ]
     },
     {
@@ -163,7 +168,10 @@
       "condition": "no_stigmatizing_language AND no_moralizing_tone AND people_before_labels",
       "principle": "principle_non_judgment",
       "action_on_violation": "block",
-      "severity": "high"
+      "severity": "high",
+      "constraint_ids": [
+        "constraint_no_stigmatizing_language"
+      ]
     },
     {
       "id": "guard_enabling",
@@ -173,7 +181,10 @@
       "condition": "response_provides_infrastructure OR response_provides_tools OR response_provides_access",
       "principle": "principle_enabling",
       "action_on_violation": "escalate",
-      "severity": "medium"
+      "severity": "medium",
+      "constraint_ids": [
+        "constraint_no_ownership_asymmetry"
+      ]
     },
     {
       "id": "guard_no_performance_pressure",
@@ -183,7 +194,50 @@
       "condition": "content_non_competitive AND no_achievement_framing AND no_ranking",
       "principle": "principle_imagination_in_practice",
       "action_on_violation": "retry",
-      "severity": "high"
+      "severity": "high",
+      "constraint_ids": [
+        "constraint_no_performance_pressure"
+      ]
+    },
+    {
+      "id": "guard_relational_quality",
+      "name": "Relational Quality Guard",
+      "applies_to": "transition",
+      "applies_at_state": "space_state_selection",
+      "condition": "attendance_optimization_does_not_reduce_relational_quality OR community_guardian_review_required",
+      "principle": "principle_habitability",
+      "constraint_ids": [
+        "constraint_relational_quality_over_attendance"
+      ],
+      "action_on_violation": "escalate",
+      "severity": "medium",
+      "error_message": "Attendance cannot be optimized at the expense of quality of shared presence."
+    },
+    {
+      "id": "guard_activation_color_ratio",
+      "name": "Activation Color Ratio Guard",
+      "applies_to": "output",
+      "applies_at_state": "space_state_selection",
+      "condition": "red_color_ratio <= 0.05",
+      "principle": "principle_habitability",
+      "constraint_ids": [
+        "constraint_activation_color_ratio"
+      ],
+      "action_on_violation": "retry",
+      "severity": "high",
+      "error_message": "Red activation color must not exceed five percent of visual or spatial presence."
+    },
+    {
+      "id": "guard_living_community",
+      "name": "Living Community Continuity Guard",
+      "applies_to": "transition",
+      "applies_at_state": "generate_response",
+      "condition": "response_supports_continuity_or_relationship_depth",
+      "principle": "principle_living_community",
+      "constraint_ids": [],
+      "action_on_violation": "escalate",
+      "severity": "medium",
+      "error_message": "The response must support continuity, trust, or relationship depth rather than one-off consumption."
     }
   ],
   "space_states": {

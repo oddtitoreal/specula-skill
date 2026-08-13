@@ -9,43 +9,61 @@
       "id": "receive_customer_inquiry",
       "name": "Receive Customer Inquiry",
       "type": "normal",
-      "allowed_transitions": ["classify_customer_tier"]
+      "allowed_transitions": [
+        "classify_customer_tier"
+      ]
     },
     "classify_customer_tier": {
       "id": "classify_customer_tier",
       "name": "Classify Customer Tier",
       "type": "normal",
-      "allowed_transitions": ["brand_voice_alignment_check"]
+      "allowed_transitions": [
+        "brand_voice_alignment_check"
+      ]
     },
     "brand_voice_alignment_check": {
       "id": "brand_voice_alignment_check",
       "name": "Brand Voice Alignment Check",
       "type": "normal",
-      "allowed_transitions": ["heritage_compatibility_check", "escalate_brand_guardian"]
+      "allowed_transitions": [
+        "heritage_compatibility_check",
+        "escalate_brand_guardian"
+      ]
     },
     "heritage_compatibility_check": {
       "id": "heritage_compatibility_check",
       "name": "Heritage Compatibility Check",
       "type": "normal",
-      "allowed_transitions": ["personalization_depth_selection", "escalate_brand_guardian"]
+      "allowed_transitions": [
+        "personalization_depth_selection",
+        "escalate_brand_guardian"
+      ]
     },
     "personalization_depth_selection": {
       "id": "personalization_depth_selection",
       "name": "Personalization Depth Selection",
       "type": "normal",
-      "allowed_transitions": ["generate_response", "escalate_brand_guardian"]
+      "allowed_transitions": [
+        "generate_response",
+        "escalate_brand_guardian"
+      ]
     },
     "generate_response": {
       "id": "generate_response",
       "name": "Generate Response",
       "type": "normal",
-      "allowed_transitions": ["response_ready", "escalate_brand_guardian"]
+      "allowed_transitions": [
+        "response_ready",
+        "escalate_brand_guardian"
+      ]
     },
     "escalate_brand_guardian": {
       "id": "escalate_brand_guardian",
       "name": "Escalate to Brand Guardian",
       "type": "escalation",
-      "allowed_transitions": ["response_ready"]
+      "allowed_transitions": [
+        "response_ready"
+      ]
     },
     "response_ready": {
       "id": "response_ready",
@@ -71,21 +89,27 @@
       "from_state": "brand_voice_alignment_check",
       "to_state": "heritage_compatibility_check",
       "trigger": "voice_guard_passed",
-      "guard_ids": ["guard_brand_voice_alignment"]
+      "guard_ids": [
+        "guard_brand_voice_alignment"
+      ]
     },
     {
       "id": "transition_heritage_to_personalization",
       "from_state": "heritage_compatibility_check",
       "to_state": "personalization_depth_selection",
       "trigger": "heritage_guard_passed",
-      "guard_ids": ["guard_heritage_alignment"]
+      "guard_ids": [
+        "guard_heritage_alignment"
+      ]
     },
     {
       "id": "transition_personalization_to_generate",
       "from_state": "personalization_depth_selection",
       "to_state": "generate_response",
       "trigger": "exclusivity_guard_passed",
-      "guard_ids": ["guard_exclusivity_enforcement"]
+      "guard_ids": [
+        "guard_exclusivity_enforcement"
+      ]
     },
     {
       "id": "transition_generate_to_ready",
@@ -110,7 +134,10 @@
       "condition": "brand_voice_compliant == true",
       "principle": "principle_brand_voice",
       "action_on_violation": "block",
-      "severity": "high"
+      "severity": "high",
+      "constraint_ids": [
+        "constraint_brand_tone"
+      ]
     },
     {
       "id": "guard_heritage_alignment",
@@ -120,7 +147,10 @@
       "condition": "heritage_alignment_passed == true",
       "principle": "principle_heritage_respect",
       "action_on_violation": "escalate",
-      "severity": "critical"
+      "severity": "critical",
+      "constraint_ids": [
+        "constraint_heritage_consistency"
+      ]
     },
     {
       "id": "guard_exclusivity_enforcement",
@@ -130,7 +160,11 @@
       "condition": "personalization_depth >= required_depth",
       "principle": "principle_customer_exclusivity",
       "action_on_violation": "escalate",
-      "severity": "high"
+      "severity": "high",
+      "constraint_ids": [
+        "constraint_core_collection_premium",
+        "constraint_vip_personalization_depth"
+      ]
     }
   ],
   "metadata": {

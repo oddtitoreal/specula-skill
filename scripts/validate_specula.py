@@ -40,8 +40,9 @@ except ImportError:  # pragma: no cover - dependency is optional at runtime
 class SPECULAValidator:
     """Validates SPECULA governance structures."""
 
-    def __init__(self, verbose: bool = False):
+    def __init__(self, verbose: bool = False, strict: bool = False):
         self.verbose = verbose
+        self.strict = strict
         self.errors: List[str] = []
         self.warnings: List[str] = []
         self._schema_warning_emitted = False
@@ -289,6 +290,20 @@ class SPECULAValidator:
                     f"Constraint {constraint.get('id')} principle '{principle}' has no mapped guard"
                 )
 
+        # Direct constraint -> guard coverage via guard.constraint_ids.
+        # Stronger than principle-level mapping: proves each declared constraint
+        # has an identifiable enforcement rule, not just a shared principle.
+        constraint_ids = {c.get("id") for c in constitution.get("constraints", []) if c.get("id")}
+        mapped_constraints = {
+            constraint_id
+            for guard in sm.get("guards", [])
+            for constraint_id in guard.get("constraint_ids", [])
+        }
+        for constraint_id in sorted(constraint_ids - mapped_constraints):
+            self.warnings.append(
+                f"Constraint {constraint_id} has no directly mapped guard"
+            )
+
         return len(self.errors) == 0
 
     def validate_workflow(self, workflow_path: str) -> bool:
@@ -418,7 +433,12 @@ class SPECULAValidator:
         if not self.errors and not self.warnings:
             print("\n✅ All validations passed!")
 
+        if self.strict and self.warnings and not self.errors:
+            print("\n❌ STRICT MODE: warnings are treated as failures for this example.")
+
         print("\n" + "=" * 70)
+        if self.strict:
+            return not self.errors and not self.warnings
         return len(self.errors) == 0
 
 
@@ -432,10 +452,15 @@ def main():
              "Validates phase sequence, prerequisites, and dual-role requirements.",
     )
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
+    parser.add_argument(
+        "--strict",
+        action="store_true",
+        help="Treat warnings as failures (recommended for real, non-fictional examples).",
+    )
 
     args = parser.parse_args()
 
-    validator = SPECULAValidator(verbose=args.verbose)
+    validator = SPECULAValidator(verbose=args.verbose, strict=args.strict)
 
     # Run validations
     valid = True
@@ -456,9 +481,9 @@ def main():
         if not validator.validate_workflow(args.workflow):
             valid = False
 
-    validator.print_report()
+    report_ok = validator.print_report()
 
-    sys.exit(0 if valid else 1)
+    sys.exit(0 if (valid and report_ok) else 1)
 
 
 if __name__ == "__main__":

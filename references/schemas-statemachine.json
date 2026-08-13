@@ -3,7 +3,11 @@
   "title": "SPECULA State Machine Schema",
   "description": "Formal specification for state machines implementing SPECULA governance",
   "type": "object",
-  "required": ["id", "initial_state", "states"],
+  "required": [
+    "id",
+    "initial_state",
+    "states"
+  ],
   "properties": {
     "id": {
       "type": "string",
@@ -30,7 +34,10 @@
       "description": "Map of state_id -> state definition",
       "additionalProperties": {
         "type": "object",
-        "required": ["id", "name"],
+        "required": [
+          "id",
+          "name"
+        ],
         "properties": {
           "id": {
             "type": "string",
@@ -41,7 +48,12 @@
           },
           "type": {
             "type": "string",
-            "enum": ["normal", "terminal", "error", "escalation"],
+            "enum": [
+              "normal",
+              "terminal",
+              "error",
+              "escalation"
+            ],
             "description": "normal=intermediate, terminal=success end state, error=failure state, escalation=human review"
           },
           "description": {
@@ -49,7 +61,9 @@
           },
           "entry_actions": {
             "type": "array",
-            "items": {"type": "string"},
+            "items": {
+              "type": "string"
+            },
             "description": "Actions executed when entering state"
           },
           "exit_guards": {
@@ -57,12 +71,22 @@
             "items": {
               "type": "object",
               "properties": {
-                "id": {"type": "string"},
-                "condition": {"type": "string"},
-                "on_fail": {"type": "string"},
+                "id": {
+                  "type": "string"
+                },
+                "condition": {
+                  "type": "string"
+                },
+                "on_fail": {
+                  "type": "string"
+                },
                 "severity": {
                   "type": "string",
-                  "enum": ["block", "warn", "log"]
+                  "enum": [
+                    "block",
+                    "warn",
+                    "log"
+                  ]
                 }
               }
             },
@@ -70,14 +94,20 @@
           },
           "allowed_transitions": {
             "type": "array",
-            "items": {"type": "string"},
+            "items": {
+              "type": "string"
+            },
             "description": "Which states can be transitioned to from here"
           },
           "timeout": {
             "type": "object",
             "properties": {
-              "duration_ms": {"type": "number"},
-              "on_timeout": {"type": "string"}
+              "duration_ms": {
+                "type": "number"
+              },
+              "on_timeout": {
+                "type": "string"
+              }
             },
             "description": "Optional timeout and fallback action"
           }
@@ -89,7 +119,11 @@
       "description": "Explicit transition definitions",
       "items": {
         "type": "object",
-        "required": ["id", "from_state", "to_state"],
+        "required": [
+          "id",
+          "from_state",
+          "to_state"
+        ],
         "properties": {
           "id": {
             "type": "string",
@@ -107,17 +141,23 @@
           },
           "preconditions": {
             "type": "array",
-            "items": {"type": "string"},
+            "items": {
+              "type": "string"
+            },
             "description": "Conditions that must be true"
           },
           "actions": {
             "type": "array",
-            "items": {"type": "string"},
+            "items": {
+              "type": "string"
+            },
             "description": "Actions to execute during transition"
           },
           "guard_ids": {
             "type": "array",
-            "items": {"type": "string"},
+            "items": {
+              "type": "string"
+            },
             "description": "Guard checks that must pass"
           },
           "is_fallback": {
@@ -132,16 +172,25 @@
       "description": "Constitutional guard conditions",
       "items": {
         "type": "object",
-        "required": ["id", "condition"],
+        "required": [
+          "id",
+          "condition"
+        ],
         "properties": {
           "id": {
             "type": "string",
             "pattern": "^guard_[a-z0-9_]+$"
           },
-          "name": {"type": "string"},
+          "name": {
+            "type": "string"
+          },
           "applies_to": {
             "type": "string",
-            "enum": ["state", "transition", "output"],
+            "enum": [
+              "state",
+              "transition",
+              "output"
+            ],
             "description": "Where this guard applies"
           },
           "applies_at_state": {
@@ -158,15 +207,34 @@
           },
           "action_on_violation": {
             "type": "string",
-            "enum": ["block", "escalate", "log", "retry"],
+            "enum": [
+              "block",
+              "escalate",
+              "log",
+              "retry"
+            ],
             "description": "What happens if violated"
           },
           "severity": {
             "type": "string",
-            "enum": ["critical", "high", "medium", "low"]
+            "enum": [
+              "critical",
+              "high",
+              "medium",
+              "low"
+            ]
           },
           "error_message": {
             "type": "string"
+          },
+          "constraint_ids": {
+            "type": "array",
+            "description": "Constitutional constraints this guard directly enforces",
+            "items": {
+              "type": "string",
+              "pattern": "^constraint_[a-z0-9_]+$"
+            },
+            "uniqueItems": true
           }
         }
       }
@@ -176,19 +244,26 @@
       "description": "Reusable action definitions",
       "items": {
         "type": "object",
-        "required": ["id", "implementation"],
+        "required": [
+          "id",
+          "implementation"
+        ],
         "properties": {
           "id": {
             "type": "string"
           },
-          "name": {"type": "string"},
+          "name": {
+            "type": "string"
+          },
           "implementation": {
             "type": "string",
             "description": "How to execute this action"
           },
           "parameters": {
             "type": "array",
-            "items": {"type": "string"}
+            "items": {
+              "type": "string"
+            }
           }
         }
       }
@@ -214,21 +289,35 @@
       "items": {
         "type": "object",
         "properties": {
-          "constraint": {"type": "string"},
-          "applies_globally": {"type": "boolean"}
+          "constraint": {
+            "type": "string"
+          },
+          "applies_globally": {
+            "type": "boolean"
+          }
         }
       }
     },
     "metadata": {
       "type": "object",
       "properties": {
-        "author": {"type": "string"},
-        "created_timestamp": {"type": "string"},
-        "last_modified": {"type": "string"},
-        "framework_version": {"type": "string"},
+        "author": {
+          "type": "string"
+        },
+        "created_timestamp": {
+          "type": "string"
+        },
+        "last_modified": {
+          "type": "string"
+        },
+        "framework_version": {
+          "type": "string"
+        },
         "references": {
           "type": "array",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         }
       }
     }

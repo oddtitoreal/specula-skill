@@ -6,12 +6,14 @@ on:
       - "examples/**"
       - "references/**"
       - "scripts/validate_specula.py"
+      - "tests/**"
       - ".github/workflows/validate-examples.yml"
   pull_request:
     paths:
       - "examples/**"
       - "references/**"
       - "scripts/validate_specula.py"
+      - "tests/**"
       - ".github/workflows/validate-examples.yml"
   workflow_dispatch:
 
@@ -30,9 +32,9 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt
+          python -m pip install -r requirements.txt pytest
 
-      - name: Validate every example (constitution + state machine + integration)
+      - name: Validate examples (strict for real, lenient for fictional)
         shell: bash
         run: |
           set -euo pipefail
@@ -40,18 +42,20 @@ jobs:
           for dir in examples/*/; do
             const="${dir}constitution.json"
             sm="${dir}state-machine.json"
-            if [[ -f "$const" && -f "$sm" ]]; then
-              echo "::group::Validating ${dir}"
-              if ! python scripts/validate_specula.py \
-                    --constitution "$const" \
-                    --state-machine "$sm"; then
-                status=1
-              fi
-              echo "::endgroup::"
+            [[ -f "$const" && -f "$sm" ]] || continue
+            # Real examples (metadata.fictional_example == false) must be warning-free.
+            fictional=$(python -c "import json,sys; print(json.load(open('$sm')).get('metadata',{}).get('fictional_example'))")
+            strict=""
+            if [[ "$fictional" == "False" ]]; then strict="--strict"; fi
+            echo "::group::Validating ${dir} (strict=${strict:-no})"
+            if ! python scripts/validate_specula.py $strict \
+                  --constitution "$const" --state-machine "$sm"; then
+              status=1
             fi
+            echo "::endgroup::"
           done
-          if [[ "$status" -ne 0 ]]; then
-            echo "One or more examples failed schema/consistency validation."
-            exit 1
-          fi
-          echo "All examples passed schema and consistency validation."
+          [[ "$status" -eq 0 ]] || { echo "Example validation failed."; exit 1; }
+          echo "All examples passed (real examples are warning-free)."
+
+      - name: Run semantic coverage tests
+        run: pytest tests/ -q
