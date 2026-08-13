@@ -95,6 +95,14 @@
       "principle": "principle_habitability",
       "severity_on_violation": "high",
       "action_on_violation": "revise_response"
+    },
+    {
+      "id": "constraint_continuity_over_one_off_activation",
+      "constraint_type": "soft",
+      "rule": "Activation should support return, trust, and relationship depth rather than isolated consumption.",
+      "principle": "principle_living_community",
+      "severity_on_violation": "medium",
+      "action_on_violation": "escalate_to_community_guardian"
     }
   ],
   "stakeholders": [
@@ -151,7 +159,12 @@
     "example_purpose": "Real community space brand governance derived from co-design and Specula Method Brand Archeology",
     "fictional_example": false,
     "client": "Il posto delle fragole — Via Ponchielli 81, Pesaro",
-    "method_phases_applied": ["1.5", "2", "3_partial", "4"],
+    "method_phases_applied": [
+      "1.5",
+      "2",
+      "3_partial",
+      "4"
+    ],
     "attribution": "Specula Future Crafting"
   }
 }
