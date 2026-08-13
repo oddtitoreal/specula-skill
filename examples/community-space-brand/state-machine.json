@@ -281,9 +281,9 @@
       "color_weight": {
         "sand": 0.5,
         "white": 0.15,
-        "green": 0.15,
+        "green": 0.2,
         "black": 0.1,
-        "red": 0.1
+        "red": 0.05
       }
     }
   },

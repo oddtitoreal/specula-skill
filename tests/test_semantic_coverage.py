@@ -86,3 +86,17 @@ def test_habitability_guards_are_attached_to_runtime_flow():
 def test_real_examples_exist():
     # Guard against silently testing nothing if the metadata flag changes.
     assert REAL_EXAMPLES, "no real (non-fictional) examples found to test"
+
+
+def test_activation_color_ratio_respected_in_space_states():
+    """Data must obey the hard constraint that guard_activation_color_ratio enforces:
+    red (activation) never exceeds 5% in any declared space state."""
+    sm = json.loads(
+        (EXAMPLES / "community-space-brand" / "state-machine.json").read_text(encoding="utf-8")
+    )
+    offenders = {
+        name: cfg["color_weight"].get("red", 0.0)
+        for name, cfg in sm.get("space_states", {}).items()
+        if cfg.get("color_weight", {}).get("red", 0.0) > 0.05
+    }
+    assert not offenders, f"space states exceeding 5% red: {offenders}"
