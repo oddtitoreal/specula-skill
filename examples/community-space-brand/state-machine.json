@@ -234,7 +234,9 @@
       "applies_at_state": "generate_response",
       "condition": "response_supports_continuity_or_relationship_depth",
       "principle": "principle_living_community",
-      "constraint_ids": [],
+      "constraint_ids": [
+        "constraint_continuity_over_one_off_activation"
+      ],
       "action_on_violation": "escalate",
       "severity": "medium",
       "error_message": "The response must support continuity, trust, or relationship depth rather than one-off consumption."
