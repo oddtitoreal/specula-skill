@@ -2,6 +2,18 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.3.0] - 2026-10-21
+
+### Added
+- Criteria as hypotheses, aligned with `specula-method` 2.0 and `specula-framework` 1.3: constraint fields `status` (`hypothesis`, `confirmed`, `retired`), `expected_effect`, `review_date`, `observed_effect`; constitution flag `criteria_as_hypotheses`.
+- Validator: a hard constraint marked as hypothesis is an error; with `criteria_as_hypotheses`, soft and preference criteria without `expected_effect` or `review_date` raise a warning; `--review-date YYYY-MM-DD` reports overdue reviews (opt-in, so results do not change with the calendar).
+- `tests/test_criteria_as_hypotheses.py`.
+- `templates/example-constitution.json`: opts in and shows a soft criterion as hypothesis.
+
+### Notes
+- The real example `community-space-brand` is unchanged: its criteria will carry expected effects and review dates when the client defines them. Invented values would misrepresent the case.
+- `README.md`, `METHOD.md`, `ALIGNMENT.md` updated.
+
 ## [0.2.0-scaffold] - 2026-03-27
 
 ### Added

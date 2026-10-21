@@ -91,6 +91,7 @@
       "principles_supporting": ["principle_fairness"]
     }
   ],
+  "criteria_as_hypotheses": true,
   "constraints": [
     {
       "id": "constraint_reasoning_mandatory",
@@ -130,7 +131,11 @@
       "rule": "User should be able to override recommendation",
       "principle": "principle_user_autonomy",
       "severity_on_violation": "high",
-      "action_on_violation": "log_restriction"
+      "action_on_violation": "log_restriction",
+      "status": "hypothesis",
+      "expected_effect": "Users override fewer than one recommendation in five, and overrides cluster on cases the model flags as low confidence",
+      "review_date": "2027-01-31",
+      "observed_effect": null
     }
   ],
   "behavioral_specs": [

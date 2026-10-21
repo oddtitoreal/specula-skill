@@ -1,6 +1,6 @@
 # SPECULA Governance Framework
 
-![Version 0.1.2](https://img.shields.io/badge/version-0.1.2-blue)
+![Version 0.3.0](https://img.shields.io/badge/version-0.3.0-blue)
 ![Status Initial Release](https://img.shields.io/badge/status-initial%20release-brightgreen)
 ![License MIT](https://img.shields.io/badge/license-MIT-green)
 
@@ -49,6 +49,7 @@ Choose your entry point:
 - Working templates and validator tool
 - Manifesto and method layers (`SPECULA-MANIFESTO.md`, `METHOD.md`)
 - Domain examples: luxury-fashion-brand (fictional) and community-space-brand (real, derived from Specula Method)
+- Criteria as hypotheses (v0.3): hard constraints stay fixed as red lines; soft and preference criteria can carry `status`, `expected_effect`, `review_date`, `observed_effect`. Opt in with `criteria_as_hypotheses: true`; check overdue reviews with `--review-date YYYY-MM-DD`
 
 ## What's Not In v0.1.x
 

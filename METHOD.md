@@ -34,6 +34,10 @@ Outputs:
 - integration gaps
 - refined governance artifacts
 
+### Values Stay Fixed, Criteria Are Tested
+
+Hard constraints translate red lines and do not change through review. Soft and preference constraints translate values into decision criteria: in `specula-method` 2.0 they are hypotheses. Each one can declare an expected effect and a review date; at review, the observed effect is recorded and the criterion is confirmed, revised, or retired. Set `criteria_as_hypotheses: true` in the constitution to make the validator require both fields.
+
 ## Core Patterns
 
 ### Pattern 1: Constitutional Mapping

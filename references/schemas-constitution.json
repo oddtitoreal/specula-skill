@@ -5,6 +5,10 @@
   "type": "object",
   "required": ["constitution_id", "version", "principles"],
   "properties": {
+    "criteria_as_hypotheses": {
+      "type": "boolean",
+      "description": "Added in 0.3. When true, every soft or preference constraint must carry expected_effect and review_date (specula-method 2.0: values stay fixed, criteria are hypotheses)."
+    },
     "constitution_id": {
       "type": "string",
       "description": "Unique identifier for this constitution",
@@ -108,7 +112,7 @@
           "constraint_type": {
             "type": "string",
             "enum": ["hard", "soft", "preference"],
-            "description": "Hard=must not violate, Soft=should avoid, Preference=preferred"
+            "description": "Hard=must not violate (a red line, fixed). Soft=should avoid, Preference=preferred: decision criteria, treated as hypotheses when criteria_as_hypotheses is true (specula-method 2.0)"
           },
           "rule": {
             "type": "string",
@@ -126,6 +130,24 @@
           "action_on_violation": {
             "type": "string",
             "description": "Action to take if violated"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["hypothesis", "confirmed", "retired"],
+            "description": "Added in 0.3. Lifecycle of a soft or preference criterion. Hard constraints are red lines and are never hypotheses."
+          },
+          "expected_effect": {
+            "type": "string",
+            "description": "Added in 0.3. What applying the criterion should produce; compared with the observed effect at the review date."
+          },
+          "review_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Added in 0.3. Date on which expected and observed effects are compared."
+          },
+          "observed_effect": {
+            "type": ["string", "null"],
+            "description": "Added in 0.3. Recorded at review."
           }
         }
       }

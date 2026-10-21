@@ -27,13 +27,21 @@ When this repository diverges from either source, update this file.
 - no canonical `meta/payload` wrapper enforcement
 - no phase-gating orchestrator (`0,1,1.5,2,3,4,5,6`)
 
+## Method 2.0 Alignment (v0.3)
+
+`specula-method` 2.0 treats decision criteria as hypotheses while values stay fixed. In this repository:
+
+- hard constraints map to red lines and cannot be hypotheses (validator error);
+- soft and preference constraints map to Strategic Protocol criteria, with optional `status`, `expected_effect`, `review_date`, `observed_effect`;
+- the framework counterpart is `decision_log.schema.json` in `specula-framework` 1.3.
+
 ## Terminology Mapping
 
 | Canonical term (`specula-framework`) | In `specula-skill` v0.1.x | Status |
 |---|---|---|
 | Ethical Gate | Guard checks + escalation rules | Partial mapping |
 | Refusal Register | Constraint violations + escalation/audit records | Conceptual mapping |
-| Guardian | Not implemented in validator/runtime | Out of scope |
+| Guardian | Not implemented in validator/runtime; `--review-date` reports criteria past their review | Partial mapping (review of criteria only) |
 | Canonical modes (`exploration`, `ethical_gate`, etc.) | Not represented as runtime mode enum | Out of scope |
 | `artifact_id/phase/mode` metadata wrapper | Not enforced | Out of scope |
 
