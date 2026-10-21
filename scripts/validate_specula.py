@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SPECULA Validation Tool (v0.1.2 / v0.2-scaffold)
+SPECULA Validation Tool (v0.1.2 / v0.2-scaffold / v0.3)
 
 Validates SPECULA governance structures against JSON schemas and consistency rules.
 
@@ -14,6 +14,11 @@ CAPABILITIES (v0.2-scaffold — in progress):
 - Workflow orchestration validation (structure only, not runtime execution)
   validate_workflow() checks: required phase sequence, prerequisite mapping,
   validation gate presence, and dual-role requirement fields.
+
+CAPABILITIES (v0.3):
+- Criteria as hypotheses: hard constraints cannot be hypotheses; with
+  criteria_as_hypotheses, soft and preference criteria need expected_effect
+  and review_date; optional --review-date reports overdue reviews.
 
 PLANNED (v0.2 full):
 - Prompt playbook generation from constitution + state machine
@@ -29,6 +34,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from datetime import date
 from pathlib import Path
 from typing import Any, List
 
@@ -40,9 +46,18 @@ except ImportError:  # pragma: no cover - dependency is optional at runtime
 class SPECULAValidator:
     """Validates SPECULA governance structures."""
 
-    def __init__(self, verbose: bool = False, strict: bool = False):
+    def __init__(
+        self,
+        verbose: bool = False,
+        strict: bool = False,
+        review_reference_date: date | None = None,
+    ):
         self.verbose = verbose
         self.strict = strict
+        # When set, criteria still marked as hypotheses whose review_date is
+        # earlier than this date are reported as overdue (opt-in, so that
+        # validation results do not change with the calendar).
+        self.review_reference_date = review_reference_date
         self.errors: List[str] = []
         self.warnings: List[str] = []
         self._schema_warning_emitted = False
@@ -144,6 +159,9 @@ class SPECULAValidator:
                         f"Constraint {constraint.get('id')} references non-existent principle: {constraint['principle']}"
                     )
 
+        # Criteria as hypotheses (v0.3, specula-method 2.0)
+        self._check_criteria_as_hypotheses(constitution)
+
         # Validate conflict resolution
         if "conflict_resolution" in constitution:
             strategy = constitution["conflict_resolution"].get("strategy")
@@ -162,6 +180,59 @@ class SPECULAValidator:
                 )
 
         return len(self.errors) == 0
+
+    def _check_criteria_as_hypotheses(self, constitution: dict) -> None:
+        """Values stay fixed; the criteria that translate them are hypotheses.
+
+        - A hard constraint is a red line: it can never be a hypothesis.
+        - When the constitution opts in with criteria_as_hypotheses, every soft
+          or preference constraint must declare expected_effect and review_date.
+        - When a review reference date is given, hypotheses past their review
+          date without an observed effect are reported as overdue.
+        """
+        opted_in = bool(constitution.get("criteria_as_hypotheses"))
+        for constraint in constitution.get("constraints", []):
+            cid = constraint.get("id", "<unknown>")
+            ctype = constraint.get("constraint_type")
+            status = constraint.get("status")
+
+            if ctype == "hard" and status == "hypothesis":
+                self.errors.append(
+                    f"Constraint {cid} is hard (a red line) and cannot be marked as a hypothesis"
+                )
+                continue
+
+            if ctype not in ("soft", "preference"):
+                continue
+
+            if opted_in:
+                missing = [
+                    field for field in ("expected_effect", "review_date")
+                    if not constraint.get(field)
+                ]
+                if missing:
+                    self.warnings.append(
+                        f"Criterion {cid} is missing {', '.join(missing)}: "
+                        "criteria are hypotheses with an expected effect and a review date"
+                    )
+
+            review = constraint.get("review_date")
+            if (
+                self.review_reference_date is not None
+                and review
+                and status in (None, "hypothesis")
+                and not constraint.get("observed_effect")
+            ):
+                try:
+                    review_day = date.fromisoformat(review)
+                except ValueError:
+                    self.errors.append(f"Criterion {cid} has an invalid review_date: {review}")
+                    continue
+                if review_day < self.review_reference_date:
+                    self.warnings.append(
+                        f"Criterion {cid} review overdue since {review}: record the observed effect "
+                        "and confirm, revise or retire the criterion"
+                    )
 
     def validate_state_machine(self, sm_path: str) -> bool:
         """Validate a state machine file."""
@@ -451,6 +522,11 @@ def main():
         help="Path to a Specula workflow JSON file (v0.2-scaffold). "
              "Validates phase sequence, prerequisites, and dual-role requirements.",
     )
+    parser.add_argument(
+        "--review-date",
+        help="Report criteria still marked as hypotheses whose review_date is earlier "
+             "than this date (YYYY-MM-DD). Opt-in, added in v0.3.",
+    )
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
     parser.add_argument(
         "--strict",
@@ -460,7 +536,12 @@ def main():
 
     args = parser.parse_args()
 
-    validator = SPECULAValidator(verbose=args.verbose, strict=args.strict)
+    review_reference = date.fromisoformat(args.review_date) if args.review_date else None
+    validator = SPECULAValidator(
+        verbose=args.verbose,
+        strict=args.strict,
+        review_reference_date=review_reference,
+    )
 
     # Run validations
     valid = True
